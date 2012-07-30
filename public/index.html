@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>forget-me-not</title>
+<script src="lib/angular-1.0.1.min.js"></script>
+<script>
+function TodoCtrl($scope) {
+  $scope.entries = [
+   {description:"test", period:4}
+  ];
+}
+</script>
+</head>
+<body>
+<header id="head"><h1>forget-me-not</h1></header>
+<div ng-controller="TodoCtrl">
+<table>
+<thead>
+<tr><th>内容</th><th>所要時間(h)</th></tr>
+</thead>
+<tbody>
+<tr ng-repeat="entry in entries">
+	<td>{{entry.description}}</td>
+	<td>{{entry.period}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>
