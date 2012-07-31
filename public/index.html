@@ -3,29 +3,62 @@
 <head>
 <meta charset="UTF-8" />
 <title>forget-me-not</title>
+<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+
 <script src="lib/angular-1.0.1.min.js"></script>
+<script type="text/javascript" src="lib/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="lib/jquery-ui-1.8.22.custom.min.js"></script>
+
 <script>
+$(function() {
+  $('#tabs').tabs();
+  $('#entries').selectable();
+});
+
 function TodoCtrl($scope) {
   $scope.entries = [
    {description:"test", period:4}
   ];
+
+  $scope.addEntry = function() {
+    $scope.entries.push({description:$scope.formEntryDescription, period:1});
+    $scope.formEntryDescription = "";
+  }
 }
 </script>
+
+<style>
+#feedback { font-size: 1.4em; }
+#entries .ui-selecting { background: #FECA40; }
+#entries .ui-selected { background: #F39814; color: white; }
+#entries { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#entries li { margin: 3px; padding: 0.4em; font-size: 1.4em; border-radius: 5px; }
+div.description { text-align: left; float: left; }
+div.period { text-align: right; }
+</style>
+
 </head>
 <body>
 <header id="head"><h1>forget-me-not</h1></header>
-<div ng-controller="TodoCtrl">
-<table>
-<thead>
-<tr><th>内容</th><th>所要時間(h)</th></tr>
-</thead>
-<tbody>
-<tr ng-repeat="entry in entries">
-	<td>{{entry.description}}</td>
-	<td>{{entry.period}}</td>
-</tr>
-</tbody>
-</table>
+<div id="tabs">
+  <ul>
+    <li><a href="#todoTab">ToDo</a></li>
+    <li><a href="#calendarTab">Calendar</a></li>
+  </ul>
+  <div id="todoTab">
+    <div ng-controller="TodoCtrl">
+      <form class="form-horizontal">
+        <input type="text" ng-model="formEntryDescription" ng-model-instant>
+        <button class="btn" ng-click="addEntry()"><i class="icon-plus"></i>Add</button>
+      </form>
+      <ol id="entries">
+	      <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
+      </ol>
+    </div> <!-- ng-controller: TodoCtrl -->
+  </div> <!-- todoTab -->
+  <div id="calendarTab">
+    <iframe src="https://www.google.com/calendar/embed?mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=j1cjb6hag0khuducbjlpoq6sj8%40group.calendar.google.com&amp;color=%2388880E&amp;src=7ffhsgeogne8u4flu5s695o5j4%40group.calendar.google.com&amp;color=%23333333&amp;src=youchan01%40gmail.com&amp;color=%232952A3&amp;ctz=Asia%2FTokyo" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>
+  </div>
 </div>
 </body>
 </html>
