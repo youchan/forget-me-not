@@ -12,7 +12,9 @@
 <script>
 $(function() {
   $('#tabs').tabs();
-  $('#entries').selectable();
+  $("#entries").accordion({ header: "h3" });
+  $('#unscheduled').selectable();
+  $('#scheduled').selectable();
 });
 
 function TodoCtrl($scope) {
@@ -29,12 +31,18 @@ function TodoCtrl($scope) {
 
 <style>
 #feedback { font-size: 1.4em; }
-#entries .ui-selecting { background: #FECA40; }
-#entries .ui-selected { background: #F39814; color: white; }
-#entries { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-#entries li { margin: 3px; padding: 0.4em; font-size: 1.4em; border-radius: 5px; }
-div.description { text-align: left; float: left; }
-div.period { text-align: right; }
+#entries { float: left; width: 60%; padding: 8px; }
+#schedule { float: left; padding: 8px; width: 36%; }
+#schedule_inner { padding: 8px; border: solid 1px #FECA40; border-radius: 5px; }
+.selectable .ui-selecting { background: #FECA40; }
+.selectable .ui-selected { background: #F39814; color: white; }
+.selectable { list-style-type: none; margin: 0; padding: 0; }
+.selectable li { margin: 3px; padding: 4px; font-size: 1.4em; border-radius: 5px; }
+.description { text-align: left; float: left; }
+.period { text-align: right; }
+#koma_outer { border: solid 1px 1px 1px 0 #aaa; background-color: #eee; }
+.koma { height: 40px; margin: 1px; border: solid 1px #aaa; }
+.clears { clear: both; }
 </style>
 
 </head>
@@ -51,9 +59,45 @@ div.period { text-align: right; }
         <input type="text" ng-model="formEntryDescription" ng-model-instant>
         <button class="btn" ng-click="addEntry()"><i class="icon-plus"></i>Add</button>
       </form>
-      <ol id="entries">
-	      <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
-      </ol>
+      <div id="entries">
+	<div>
+          <h3><a href="#">未スケジュール</a></h3>
+          <ol id="unscheduled" class="selectable">
+            <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
+          </ol>
+        </div>
+	<div>
+          <h3><a href="#">スケジュール済</a></h3>
+          <ol id="scheduled" class="selectable">
+            <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
+          </ol>
+        </div>
+      </div> <!-- entries -->
+      <div id="schedule">
+	<div id="schedule_inner">
+          <div class="koma">4:00</div>
+          <div class="koma">5:00</div>
+          <div class="koma">6:00</div>
+          <div class="koma">7:00</div>
+          <div class="koma">8:00</div>
+          <div class="koma">9:00</div>
+          <div class="koma">10:00</div>
+          <div class="koma">11:00</div>
+          <div class="koma">12:00</div>
+          <div class="koma">13:00</div>
+          <div class="koma">14:00</div>
+          <div class="koma">15:00</div>
+          <div class="koma">16:00</div>
+          <div class="koma">17:00</div>
+          <div class="koma">18:00</div>
+          <div class="koma">19:00</div>
+          <div class="koma">20:00</div>
+          <div class="koma">21:00</div>
+          <div class="koma">22:00</div>
+          <div class="koma">23:00</div>
+        </div> <!-- schedule_inner -->
+      </div> <!-- schedule -->
+      <br class="clears">
     </div> <!-- ng-controller: TodoCtrl -->
   </div> <!-- todoTab -->
   <div id="calendarTab">
