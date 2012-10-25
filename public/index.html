@@ -8,7 +8,7 @@
 <script src="lib/angular-1.0.1.min.js"></script>
 <script type="text/javascript" src="lib/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="lib/jquery-ui-1.8.22.custom.min.js"></script>
-
+<script src="js/todoEntries.js"></script>
 <script>
 $(function() {
   $('#tabs').tabs();
@@ -17,22 +17,13 @@ $(function() {
   $('#scheduled').selectable();
 });
 
-function TodoCtrl($scope) {
-  $scope.entries = [
-   {description:"test", period:4}
-  ];
-
-  $scope.addEntry = function() {
-    $scope.entries.push({description:$scope.formEntryDescription, period:1});
-    $scope.formEntryDescription = "";
-  }
-}
 </script>
 
 <style>
 #feedback { font-size: 1.4em; }
 #entries { float: left; width: 60%; padding: 8px; }
 #schedule { float: left; padding: 8px; width: 36%; }
+#
 #schedule_inner { padding: 8px; border: solid 1px #FECA40; border-radius: 5px; }
 .selectable .ui-selecting { background: #FECA40; }
 .selectable .ui-selected { background: #F39814; color: white; }
@@ -43,6 +34,7 @@ function TodoCtrl($scope) {
 #koma_outer { border: solid 1px 1px 1px 0 #aaa; background-color: #eee; }
 .koma { height: 40px; margin: 1px; border: solid 1px #aaa; }
 .clears { clear: both; }
+.acc_content { height: 200px; }
 </style>
 
 </head>
@@ -54,22 +46,24 @@ function TodoCtrl($scope) {
     <li><a href="#calendarTab">Calendar</a></li>
   </ul>
   <div id="todoTab">
-    <div ng-controller="TodoCtrl">
+    <div ng-controller="TodoEntriesController">
       <form class="form-horizontal">
-        <input type="text" ng-model="formEntryDescription" ng-model-instant>
+        <input type="text" ng-model="entryDescription" ng-model-instant>
         <button class="btn" ng-click="addEntry()"><i class="icon-plus"></i>Add</button>
       </form>
       <div id="entries">
 	<div>
           <h3><a href="#">未スケジュール</a></h3>
+          <div class="acc_content">
           <ol id="unscheduled" class="selectable">
-            <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
+            <li ng-repeat="entry in unscheduledEntries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
           </ol>
+          </div>
         </div>
 	<div>
           <h3><a href="#">スケジュール済</a></h3>
           <ol id="scheduled" class="selectable">
-            <li ng-repeat="entry in entries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
+            <li ng-repeat="entry in scheduledEntries"><div class="description">{{entry.description}}</div><div class="period">{{entry.period}}</div></li>
           </ol>
         </div>
       </div> <!-- entries -->
@@ -98,10 +92,10 @@ function TodoCtrl($scope) {
         </div> <!-- schedule_inner -->
       </div> <!-- schedule -->
       <br class="clears">
-    </div> <!-- ng-controller: TodoCtrl -->
+    </div> <!-- ng-controller: TodoEntriesCtrl -->
   </div> <!-- todoTab -->
   <div id="calendarTab">
-    <iframe src="https://www.google.com/calendar/embed?mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=j1cjb6hag0khuducbjlpoq6sj8%40group.calendar.google.com&amp;color=%2388880E&amp;src=7ffhsgeogne8u4flu5s695o5j4%40group.calendar.google.com&amp;color=%23333333&amp;src=youchan01%40gmail.com&amp;color=%232952A3&amp;ctz=Asia%2FTokyo" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    <iframe src="calendar"/>
   </div>
 </div>
 </body>
