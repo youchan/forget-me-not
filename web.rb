@@ -1,11 +1,18 @@
 require 'sinatra'
 require 'sequel'
 
-DB = Sequel.sqlite("forget-me-not.db");
+Sequel.sqlite();
 
-DB.create_table :items do
-  primary_key :id
-  
+class Todo < Sequel:Model
+  unless table_exists?
+   set_schema do
+     primary_key: id
+     string: description
+     int: period
+     boolean: isScheduled
+   end
+   create_table
+  end
 end
 
 get '/calendar' do
