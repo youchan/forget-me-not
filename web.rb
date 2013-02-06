@@ -1,15 +1,16 @@
+require 'rubygems'
 require 'sinatra'
 require 'sequel'
 
 Sequel.sqlite();
 
-class Todo < Sequel:Model
+class Todo < Sequel::Model
   unless table_exists?
    set_schema do
-     primary_key: id
-     string: description
-     int: period
-     boolean: isScheduled
+     primary_key :id
+     string :description
+     int :period
+     boolean :isScheduled
    end
    create_table
   end

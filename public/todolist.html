@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en-US" ng-app="demoApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Forget-me-not</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="css/angular-ui.css" rel="stylesheet"/>
+  <link href="css/fullcalendar.css" rel="stylesheet"/>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+  <script src="js/angular-ui.js"></script>
+  <script src="js/fullcalendar.js"></script>
+  <script src="js/app2.js"></script>
+  <script src="js/todoCtrl.js"></script>
+  <script src="js/CalendarCtrl.js"></script>
+  <style type="text/css">
+  body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+  </style>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="#">Forget me not</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div class="container" ng-controller="eventCtrl">
+    <div class="row">
+      <div class="span4">
+        <form action="" class="form-inline">
+          <fieldset>
+            <legend>Add your todo</legend>
+            <input type="text" name="" id="" ng-model="newItem" placeholder="do something">
+            <button class="btn btn-primary" ng-click="add()" ng-disabled="!newItem">Add <i class="icon-white icon-plus"></i> </button>
+          </fieldset>
+        </form>
+
+        <h4>スケジュールされていないTODO</h4>
+        <ul>
+          <li ng-repeat="item in items | xxx:true">
+            {{item.title}}
+            <a href="" ng-click="appendCalendarEvent(item)"> <i class="icon-calendar"></i> </a>
+            <a href="" ng-click="removeTodo(item)"> <i class="icon-remove"></i> </a> </li>
+        </ul>
+        <h4>スケジュールされたTODO</h4>
+        <ul>
+          <li ng-repeat="item in items | xxx:false">
+            {{item.title}}
+            <a href="" ng-click="appendCalendarEvent(item)" ng-show="!item.start"> <i class="icon-calendar"></i> </a>
+            <a href="" ng-click="removeTodo(item)"> <i class="icon-remove"></i> </a> </li>
+        </ul>
+      </div>
+      <div class="span8">
+        <div ui-calendar="{height: 450,editable: true}" class="span8 calendar" ng-model="events"></div>
+      </div>
+    </div>
+  </div> <!-- /container -->
+</body>
+</html>
