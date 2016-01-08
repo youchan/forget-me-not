@@ -1,0 +1,21 @@
+!!!
+%html(lang="en" data-framework="hyalite")
+  %head
+    %meta(charset="utf-8")
+    %title forget-me-not
+    %link{rel:"stylesheet", href:"css/application.css"}
+
+  %body
+    %header
+      %h1 forget-me-not
+      %nav
+        %ul
+          %li.selected
+            %a{href:"#todoTab"} ToDo
+          %li
+            %a{href:"#calendarTab"} Calendar
+      %br.clears
+    %section.tab-content
+      #todo-tab
+
+    = javascript_include_tag 'application'
