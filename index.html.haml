@@ -7,15 +7,21 @@
 
   %body
     %header
-      %h1 forget-me-not
-      %nav
+      .navbar
+        .navbar-inner
+          .container-narrow
+            %img{src: 'images/forget-me-not.png'}
+            %img.icon{src: 'images/youchan_square.jpg'}
+      %nav.container-narrow
         %ul
           %li.selected
             %a{href:"#todoTab"} ToDo
           %li
             %a{href:"#calendarTab"} Calendar
       %br.clears
-    %section.tab-content
-      #todo-tab
+    %section
+      .container-narrow
+        .tab-content
+          #todo-tab
 
     = javascript_include_tag 'application'

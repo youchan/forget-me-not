@@ -8,6 +8,42 @@
 .clears { clear: both; }
 .acc_content { height: 200px; }
 
+body {
+  margin: 0;
+}
+
+.navbar-inner {
+  padding: 0 20px;
+  background-color: #9cf;
+  margin-bottom: 26px;
+  min-height: 80px;
+}
+
+.container-narrow {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.navbar img.icon {
+  float: right;
+  padding: 10px;
+  margin-top: 10px;
+  width: 40px;
+  border-radius: 40px;
+}
+
+.navbar img.logo {
+  float: left;
+  padding: 10px;
+  height: 64px;
+}
+
+.navbar .title {
+  padding: 12px;
+  font-size: 180%;
+  margin: 0;
+}
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -24,15 +60,21 @@ nav li {
 
 nav li a {
     padding: 0 10px;
+    color: #444;
+    text-decoration: none;
 }
 
 nav li.selected {
     padding-bottom: 1px; 
-    background: #adf;
+    background: #8af;
+}
+
+nav li.selected a {
+    color: #fff;
 }
 
 .tab-content {
-    border: 8px solid #adf;
+    border: 8px solid #8af;
     padding: 16px;
 }
 
