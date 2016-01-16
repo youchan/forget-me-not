@@ -2,8 +2,6 @@
 .selectable .ui-selected { background: #F39814; color: white; }
 .selectable { list-style-type: none; margin: 0; padding: 0; }
 .selectable li { margin: 3px; padding: 4px; font-size: 1.4em; border-radius: 5px; }
-.description { text-align: left; float: left; }
-.period { text-align: right; }
 
 .schedule {
     float: left;
@@ -22,7 +20,8 @@
 }
 
 .clears { clear: both; }
-.acc_content { height: 200px; }
+
+.acc-content { height: 200px; }
 
 body {
   margin: 0;
@@ -94,7 +93,24 @@ nav li.selected a {
     padding: 16px;
 }
 
-.entries {
+.todo-view {
     float: left;
     width: 50%;
+}
+
+.todo-view img.pomodoro {
+  width: 1em;
+}
+
+.todo-view span.pomodoro {
+  margin-left: 1em;
+}
+
+.todo-view input.new-todo {
+  font-size: 32px;
+  width: 80%;
+  border: none;
+  border-bottom: solid 1px #888;
+  outline: none;
+  margin-left: 12px;
 }
