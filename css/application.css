@@ -4,7 +4,23 @@
 .selectable li { margin: 3px; padding: 4px; font-size: 1.4em; border-radius: 5px; }
 .description { text-align: left; float: left; }
 .period { text-align: right; }
-.koma { height: 40px; margin: 1px; border: solid 1px #aaa; }
+
+.schedule {
+    float: left;
+    width: 50%;
+}
+
+.schedule-inner {
+  border-top: solid 1px #aaa;
+  border-left: solid 1px #aaa;
+  border-right: solid 1px #aaa;
+}
+
+.koma {
+  height: 40px;
+  border-bottom: solid 1px #aaa;
+}
+
 .clears { clear: both; }
 .acc_content { height: 200px; }
 
@@ -79,11 +95,6 @@ nav li.selected a {
 }
 
 .entries {
-    float: left;
-    width: 50%;
-}
-
-#schedule {
     float: left;
     width: 50%;
 }
