@@ -1,5 +1,5 @@
 require_relative 'schedule_view'
-require_relative 'entry'
+require_relative '../models/entry'
 
 class TodoView
   include Hyalite::Component

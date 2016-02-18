@@ -1,5 +1,5 @@
 require 'hyalite'
-require_relative 'todo_view'
+require_relative 'views/todo_view'
 
 class App
   include Hyalite::Component::ShortHand
