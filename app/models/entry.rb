@@ -1,10 +1,8 @@
-class Entry
-  attr_accessor :description, :pomodoro
+require_relative '../base/model'
 
-  def initialize(description, pomodoro = 1)
-    @description = description
-    @pomodoro = pomodoro
-  end
+class Entry < Model
+  field :description, :string
+  field :pomodoro, :int
 
   def scheduled?
     false

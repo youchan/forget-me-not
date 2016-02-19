@@ -10,7 +10,7 @@ class TodoView
   end
 
   def add_entry
-    @state[:entries] << Entry.new(@state[:new_todo])
+    @state[:entries] << Entry.new(description: @state[:new_todo], pomodoro: 1)
     @state[:new_todo] = ''
     set_state(@state)
   end
