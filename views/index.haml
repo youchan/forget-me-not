@@ -24,4 +24,4 @@
         .tab-content
           #todo-tab
 
-    = javascript_include_tag 'application'
+    = ::Opal::Sprockets.javascript_include_tag('application', sprockets: settings.opal.sprockets, prefix: 'assets', debug: true)

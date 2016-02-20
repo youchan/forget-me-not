@@ -1,12 +1,13 @@
-require 'bundler'
-Bundler.require
+require 'bundler/setup'
+Bundler.require(:default)
 
-run Opal::Server.new { |s|
-  s.append_path 'app'
-  s.append_path 'node_modules'
+require File.dirname(__FILE__) + '/app.rb'
 
-  s.debug = true
-  s.main = 'application'
-  s.index_path = 'index.html.haml'
-}
+map '/' do
+  run ForgetMeNot::App.new(host: 'localhost')
+end
+
+map '/assets' do
+  run ForgetMeNot::OPAL.sprockets
+end
 

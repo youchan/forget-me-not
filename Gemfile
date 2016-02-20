@@ -1,6 +1,9 @@
 source "https://rubygems.org"
 
-gem 'opal-browser'
+gem 'sinatra'
+
 gem 'opal-router',    github: 'adambeynon/opal-router'
-gem 'opal-haml',      github: 'opal/opal-haml'
 gem 'hyalite', path: '../hyalite'
+
+gem 'haml'
+gem 'sass'
