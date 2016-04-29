@@ -6,13 +6,17 @@ class TodoView
   include Hyalite::Component::ShortHand
 
   def initial_state
-    { new_todo: '', entries: [] }
+    Entry.fetch_all {|entries| set_state(entries: entries) }
+    { new_todo: '', entries: {} }
   end
 
   def add_entry
-    @state[:entries] << Entry.new(description: @state[:new_todo], pomodoro: 1)
-    @state[:new_todo] = ''
-    set_state(@state)
+    entry = Entry.new(description: @state[:new_todo], pomodoro: 1)
+    entry.save do
+      @state[:entries][entry.id] = entry
+      @state[:new_todo] = ''
+      set_state(@state)
+    end
   end
 
   def handle_change(event)
@@ -25,17 +29,19 @@ class TodoView
     end
   end
 
+  def unscheduled_entries
+    li(nil,
+      @state[:entries].values.reject{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
+    )
+  end
+
+  def scheduled_entries
+    li(nil,
+      @state[:entries].values.select{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
+    )
+  end
+
   def render
-    unscheduled_entries = 
-      li(nil,
-        @state[:entries].reject{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
-      )
-
-    scheduled_entries =
-      li(nil,
-        @state[:entries].select{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
-      )
-
     div(nil,
       div({className: 'todo-view'},
         label({'for': 'new-todo'}, 'Todo:'),

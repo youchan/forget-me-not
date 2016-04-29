@@ -1,4 +1,6 @@
 require 'hyalite'
+require_relative 'base/client/store'
+require_relative 'models/entry'
 require_relative 'views/todo_view'
 
 class App

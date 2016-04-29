@@ -1,7 +1,10 @@
 require 'bundler/setup'
 Bundler.require(:default)
 
-require File.dirname(__FILE__) + '/app.rb'
+require_relative 'app'
+require_relative 'app/base/server/store'
+require_relative 'app/models/entry'
+require_relative 'app/base/router'
 
 map '/' do
   run ForgetMeNot::App.new(host: 'localhost')
@@ -11,3 +14,7 @@ map '/assets' do
   run ForgetMeNot::OPAL.sprockets
 end
 
+map '/api' do
+  router = Router.new(Entry)
+  run router.routes
+end
