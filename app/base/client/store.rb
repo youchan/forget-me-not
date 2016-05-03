@@ -36,8 +36,8 @@ class Store
     tables = @tables
     Browser::HTTP.get("api/#{model_class}") do
       on :success do |res|
-        tables[model_class] = res.json.map {|key, value| [key, model_class.new(value)] }.to_h
-        yield tables[model_class] if block_given?
+        tables[model_class] = res.json.map {|value| [value[:id], model_class.new(value)] }.to_h
+        yield tables[model_class].values if block_given?
       end
 
       on :failure do |res|

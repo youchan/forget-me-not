@@ -22,7 +22,7 @@ class Store
   end
 
   def fetch(model_class)
-    yield @tables[model_class] || [] if block_given?
+    yield @tables[model_class].values || [] if block_given?
   end
 end
 

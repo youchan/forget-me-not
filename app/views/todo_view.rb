@@ -7,13 +7,13 @@ class TodoView
 
   def initial_state
     Entry.fetch_all {|entries| set_state(entries: entries) }
-    { new_todo: '', entries: {} }
+    { new_todo: '', entries: [] }
   end
 
   def add_entry
     entry = Entry.new(description: @state[:new_todo], pomodoro: 1)
     entry.save do
-      @state[:entries][entry.id] = entry
+      @state[:entries] << entry
       @state[:new_todo] = ''
       set_state(@state)
     end
@@ -31,13 +31,13 @@ class TodoView
 
   def unscheduled_entries
     li(nil,
-      @state[:entries].values.reject{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
+      @state[:entries].reject{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
     )
   end
 
   def scheduled_entries
     li(nil,
-      @state[:entries].values.select{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
+      @state[:entries].select{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
     )
   end
 
