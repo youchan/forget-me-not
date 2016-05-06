@@ -15,6 +15,6 @@ map '/assets' do
 end
 
 map '/api' do
-  router = Router.new(Entry)
+  router = Router.new(Entry, TimeBox)
   run router.routes
 end
