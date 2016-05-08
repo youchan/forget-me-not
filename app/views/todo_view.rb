@@ -6,7 +6,7 @@ class TodoView
   include Hyalite::Component::ShortHand
 
   def initial_state
-    Entry.fetch_all {|entries| set_state(entries: entries) }
+    Entry.fetch {|entries| set_state(entries: entries) }
     { new_todo: '', entries: [] }
   end
 

@@ -30,9 +30,11 @@ class Store
     yield model if block_given?
   end
 
-  def fetch(model_class)
+  def fetch(model_class, filter = nil)
     File.open(@db_dir + "/#{model_class}.db") do |file|
-      @tables[model_class] = JSON.parse(file.read).map {|m| [m["id"], model_class.new(m)] }.to_h
+      records = JSON.parse(file.read)
+      records.select! {|r| filter.all? {|k,v| r[k] == v } } if filter
+      @tables[model_class] = records.map {|m| [m["id"], model_class.new(m)] }.to_h
     end
 
     yield @tables[model_class].values || [] if block_given?

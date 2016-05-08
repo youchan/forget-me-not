@@ -32,9 +32,10 @@ class Store
     end
   end
 
-  def fetch(model_class, &block)
+  def fetch(model_class, filter = nil,  &block)
     tables = @tables
-    Browser::HTTP.get("api/#{model_class}") do
+    params = filter && ('?' + filter.map {|k,v| "#{k}=#{v}" }.join(?&))
+    Browser::HTTP.get("api/#{model_class}#{params}") do
       on :success do |res|
         tables[model_class] = res.json.map {|value| [value[:id], model_class.new(value)] }.to_h
         yield tables[model_class].values if block_given?

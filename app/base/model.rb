@@ -25,8 +25,8 @@ class Model
     end
   end
 
-  def self.fetch_all
-    store.fetch(self) do |list|
+  def self.fetch(filters = nil)
+    store.fetch(self, filters) do |list|
       yield list if block_given?
     end
   end
