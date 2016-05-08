@@ -17,6 +17,14 @@ class Store
     @tables[model_class]
   end
 
+  def find(model_class, id)
+    return self[model_class][id] if self[model_class][id]
+
+    res = Browser::HTTP.get!("api/#{model_class.to_s}/#{id}")
+    model = model_class.new(res.json)
+    @tables[model_class][id] = model
+  end
+
   def save(model)
     table = @tables[model.class]
     Browser::HTTP.post("api/#{model.class.to_s}", model.to_json) do

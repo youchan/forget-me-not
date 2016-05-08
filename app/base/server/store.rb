@@ -20,6 +20,13 @@ class Store
     @tables[model_class]
   end
 
+  def find(model_class, id)
+    return self[model_class][id] if self[model_class][id]
+
+    fetch(model_class)
+    @tables[model_class][id]
+  end
+
   def save(model)
     @tables[model.class][model.id] = model
 
@@ -40,5 +47,3 @@ class Store
     yield @tables[model_class].values || [] if block_given?
   end
 end
-
-
