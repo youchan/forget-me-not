@@ -1,7 +1,7 @@
 require_relative '../base/model'
 
 class TimeBox < Model
-  field :entry_id, :string
+  field :entry, :reference
   field :pomodoro, :int
   field :start_at, :int
   field :date, :date

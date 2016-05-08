@@ -6,6 +6,7 @@
 .schedule {
     float: left;
     width: 50%;
+    position: relative;
 }
 
 .schedule-inner {
@@ -14,9 +15,66 @@
   border-right: solid 1px #aaa;
 }
 
+.time-box {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  right: 0;
+  height: 40px;
+  border: solid 1px #eee;
+  background-color: #f0faff;
+  z-index: 1;
+}
+
+.time-box.pomodoro-1 {
+  height: 38px;
+}
+
+.time-box.pomodoro-2 {
+  height: 78px;
+}
+
+.time-box.pomodoro-3 {
+  height: 118px;
+}
+
+.time-box.pomodoro-4 {
+  height: 158px;
+}
+
+.time-box.pomodoro-5 {
+  height: 198px;
+}
+
+.time-box.pomodoro-6 {
+  height: 238px;
+}
+
+.time-box.pomodoro-7 {
+  height: 278px;
+}
+
+.time-box.pomodoro-8 {
+  height: 318px;
+}
+
 .koma {
   height: 40px;
+  position: relative;
+}
+
+.koma.odd {
   border-bottom: solid 1px #aaa;
+}
+
+.koma p {
+  margin: 0;
+}
+
+.koma.odd p {
+  position: relative;
+  top: -0.5em;
+  margin-left: 2ch;
 }
 
 .clears { clear: both; }

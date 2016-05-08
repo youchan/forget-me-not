@@ -4,6 +4,7 @@ Bundler.require(:default)
 require_relative 'app'
 require_relative 'app/base/server/store'
 require_relative 'app/models/entry'
+require_relative 'app/models/time_box'
 require_relative 'app/base/router'
 
 map '/' do
