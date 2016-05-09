@@ -1,12 +1,20 @@
+body {
+  margin: 0;
+  background-color: #ffe;
+  overflow: hidden;
+}
+
 .selectable .ui-selecting { background: #FECA40; }
 .selectable .ui-selected { background: #F39814; color: white; }
 .selectable { list-style-type: none; margin: 0; padding: 0; }
 .selectable li { margin: 3px; padding: 4px; font-size: 1.4em; border-radius: 5px; }
 
 .schedule {
-    float: left;
-    width: 50%;
-    position: relative;
+  float: left;
+  position: relative;
+  width: 50%;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .schedule-inner {
@@ -81,14 +89,10 @@
 
 .acc-content { height: 200px; }
 
-body {
-  margin: 0;
-}
-
 .navbar-inner {
   padding: 0 20px;
   background-color: #9cf;
-  margin-bottom: 26px;
+  margin-bottom: 8px;
   min-height: 80px;
 }
 
@@ -147,8 +151,18 @@ nav li.selected a {
 }
 
 .tab-content {
-    border: 8px solid #8af;
-    padding: 16px;
+  border: 1px solid #8af;
+  padding: 8px;
+  background-color: #fff;
+}
+
+#todo-tab {
+  position: relative;
+  height: calc(100vh - 162px);
+}
+
+#todo-tab>div {
+  height: 100%;
 }
 
 .todo-view {
