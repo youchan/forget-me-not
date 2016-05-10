@@ -29,18 +29,6 @@ class TodoView
     end
   end
 
-  def unscheduled_entries
-    li(nil,
-      @state[:entries].reject{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
-    )
-  end
-
-  def scheduled_entries
-    li(nil,
-      @state[:entries].select{|entry| entry.scheduled?}.map{|entry| DescriptionView.el({entry: entry})}
-    )
-  end
-
   def render
     div(nil,
       div({className: 'todo-view'},
@@ -53,17 +41,10 @@ class TodoView
           onChange: -> (event) { handle_change(event) },
           value: @state[:new_todo]),
         div({className: 'entries'},
-          div(nil,
-            h3(nil, a({href:"#"}, "未スケジュール")),
-            div({className:"acc-content"},
-              ol({className:"unscheduled selectable"}, unscheduled_entries))
-          ),
-          div(nil,
-            h3(nil, a({href:"#"}, "スケジュール済")),
-            div({className:"acc-content"},
-              ol({className:"scheduled selectable"}, scheduled_entries))
+          div({className:"acc-content"},
+            ol({className:"selectable"}, li(nil, @state[:entries].map{|entry| DescriptionView.el({entry: entry})}))
           )
-        ),
+        )
       ),
       ScheduleView.el(nil),
       br(className: 'clears')
