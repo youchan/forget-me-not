@@ -13,6 +13,24 @@ class TimePeriod
     TimePeriod.new(hour * 100 + minute, @interval)
   end
 
+  def next(step=1)
+    TimePeriod.from_minutes(total_minutes + @interval * step, @interval)
+  end
+
+  def -(other)
+    (self.total_minutes - other.total_minutes) / @interval
+  end
+
+  def total_minutes
+    @hour * 60 + @minute
+  end
+
+  def self.from_minutes(minutes, interval=30)
+    hour = minutes / 60
+    minute = minutes % 60
+    TimePeriod.new(hour * 100 + minute, interval)
+  end
+
   def <=>(other)
     self.to_i <=> other.to_i
   end
