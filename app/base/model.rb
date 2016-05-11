@@ -53,27 +53,27 @@ class Model
         field_name = "#{name}_id"
 
         define_method(name) do
-          id = @fields[field_name]
+          id = @fields[field_name.to_sym]
           model_class = Object.const_get(name.camel_case)
           model_class[id]
         end
 
         define_method(name.to_s + "=") do |value|
-          @fields[field_name] = value.id
+          @fields[field_name.to_sym] = value.id
         end
       else
         field_name = name.to_s
       end
 
       define_method(field_name) do
-        @fields[field_name]
+        @fields[field_name.to_sym]
       end
 
       define_method(field_name + "=") do |value|
         unless type_validator(type).validate(value, name)
           raise 'type error'
         end
-        @fields[field_name] = value
+        @fields[field_name.to_sym] = value
       end
     end
   end
