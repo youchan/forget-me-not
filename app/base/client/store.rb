@@ -55,4 +55,8 @@ class Store
       end
     end
   end
+
+  def delete(mdoel_class)
+    @tables[model_class] = {}
+  end
 end

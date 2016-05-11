@@ -1,3 +1,5 @@
+require 'json'
+
 class Store
   DEFAULT_DB_DIR = './.store'
 
@@ -45,5 +47,10 @@ class Store
     end
 
     yield @tables[model_class].values || [] if block_given?
+  end
+
+  def delete(model_class)
+    filename = @db_dir + "/#{model_class}.db"
+    File.delete(filename) if File.exist?(filename)
   end
 end

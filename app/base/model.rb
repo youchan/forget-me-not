@@ -33,6 +33,14 @@ class Model
     end
   end
 
+  def self.create(fields, &block)
+    self.new(fields).save(&block)
+  end
+
+  def self.delete_all
+    store.delete(self)
+  end
+
   def self.fetch(filters = nil)
     store.fetch(self, filters) do |list|
       yield list if block_given?
