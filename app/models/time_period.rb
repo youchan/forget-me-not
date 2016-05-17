@@ -54,4 +54,9 @@ class TimePeriod
       @minute = time % 100
     end
   end
+
+  def self.now(interval = 30)
+    now = Time.now
+    TimePeriod.from_minutes((now.hour * 60 + now.min) / interval * interval, interval)
+  end
 end
