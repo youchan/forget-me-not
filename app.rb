@@ -19,5 +19,8 @@ module ForgetMeNot
     get '/' do
       haml :index
     end
+
+    get "/favicon.ico" do
+    end
   end
 end
