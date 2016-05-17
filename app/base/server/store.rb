@@ -32,7 +32,7 @@ class Store
   def save(model)
     @tables[model.class][model.id] = model
 
-    File.open(@db_dir + "/#{model.class}.db", "w") do |file|
+    File.open(filename(model.class), "w") do |file|
       file.write @tables[model.class].values.to_json
     end
 
@@ -40,7 +40,7 @@ class Store
   end
 
   def fetch(model_class, filter = nil)
-    File.open(@db_dir + "/#{model_class}.db") do |file|
+    File.open filename(model_class) do |file|
       records = JSON.parse(file.read)
       records.select! {|r| filter.all? {|k,v| r[k] == v } } if filter
       @tables[model_class] = records.map {|m| [m["id"], model_class.new(m)] }.to_h
@@ -50,7 +50,11 @@ class Store
   end
 
   def delete(model_class)
-    filename = @db_dir + "/#{model_class}.db"
+    filename = self.filename(model_class)
     File.delete(filename) if File.exist?(filename)
+  end
+
+  def filename(model_class)
+    @db_dir + "/#{model_class}.db"
   end
 end
