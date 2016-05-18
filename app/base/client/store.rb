@@ -40,9 +40,10 @@ class Store
     end
   end
 
-  def fetch(model_class, filter = nil,  &block)
+  def fetch(model_class, filter: nil, order: nil, &block)
     tables = @tables
-    params = filter && ('?' + filter.map {|k,v| "#{k}=#{v}" }.join(?&))
+    params = filter && (?? + filter.map {|k,v| "#{k}=#{v}" }.join(?&))
+    params = (params ? params + ?& : ??) + "order=#{[order].flatten.join(?,)}" if order
     Browser::HTTP.get("api/#{model_class}#{params}") do
       on :success do |res|
         tables[model_class] = res.json.map {|value| [value[:id], model_class.new(value)] }.to_h

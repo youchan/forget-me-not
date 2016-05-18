@@ -55,8 +55,8 @@ class Model
     store.delete(self)
   end
 
-  def self.fetch(filters = nil)
-    store.fetch(self, filters) do |list|
+  def self.fetch(filter: nil, order: nil)
+    store.fetch(self, filter: filter, order: order) do |list|
       yield list if block_given?
     end
   end

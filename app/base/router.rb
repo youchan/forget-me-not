@@ -14,7 +14,8 @@ class Router
         resource_name = model.to_s
         model_class = model
         get "/#{resource_name}" do
-          model.fetch(params) do |data|
+          order = params.delete('order')&.split(?,)
+          model.fetch(filter: params, order: order) do |data|
             json data, json_encorder: :to_json
           end
         end
