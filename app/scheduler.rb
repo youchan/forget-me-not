@@ -21,7 +21,7 @@ module ForgetMeNot
         at = @scope.begin
       end
 
-      Entry.fetch do |entries|
+      Entry.fetch(order: :order) do |entries|
         entries.each do |entry|
           duration = @scope.end - at
           pomodoro = entry.pomodoro

@@ -7,9 +7,14 @@ class ScheduleView
   include Hyalite::Component::ShortHand
 
   def initial_state
-    date = Date.today
-    TimeBox.fetch(date: date) {|time_boxes| set_state(time_boxes: time_boxes) }
+    fetch_time_boxes(Date.today)
     { time_boxes: [] }
+  end
+
+  def fetch_time_boxes(date)
+    TimeBox.fetch(filter: {date: date}) do |time_boxes|
+      set_state(time_boxes: time_boxes)
+    end
   end
 
   def render
@@ -17,7 +22,7 @@ class ScheduleView
 
     current_date = CurrentDate.new(date: Date.today)
     current_date.on(:change, :date) do |date|
-      TimeBox.fetch(date: date) {|time_boxes| set_state(time_boxes: time_boxes) }
+      fetch_time_boxes(date)
     end
 
     div({className: 'schedule'},
