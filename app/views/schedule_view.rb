@@ -1,4 +1,6 @@
 require 'date'
+require_relative '../models/current_date'
+require_relative 'date_view'
 
 class ScheduleView
   include Hyalite::Component
@@ -11,10 +13,15 @@ class ScheduleView
   end
 
   def render
-    puts @state[:time_boxes].to_json
     time_boxes = @state[:time_boxes].group_by(&:start_at)
 
+    current_date = CurrentDate.new(date: Date.today)
+    current_date.on(:change, :date) do |date|
+      TimeBox.fetch(date: date) {|time_boxes| set_state(time_boxes: time_boxes) }
+    end
+
     div({className: 'schedule'},
+      DateView.el(date: current_date),
       div({className: 'schedule-inner'},
         ('06'..'23').map {|i|
           [ div({className: 'koma even'}, p(nil, "#{i}:00"),

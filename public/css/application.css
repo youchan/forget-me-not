@@ -18,15 +18,23 @@ body {
 .schedule {
   float: left;
   position: relative;
-  width: 50%;
   height: 100%;
-  overflow-y: scroll;
+  width: 50%;
+}
+
+.date-control {
+}
+
+.date-control p {
+  margin: 0;
+  float: left;
 }
 
 .schedule-inner {
-  border-top: solid 1px #aaa;
-  border-left: solid 1px #aaa;
-  border-right: solid 1px #aaa;
+  border: solid 1px #aaa;
+  height: calc(100% - 24px);
+  overflow-y: scroll;
+  clear: both;
 }
 
 .time-box {
