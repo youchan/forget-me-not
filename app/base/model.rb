@@ -12,6 +12,7 @@ class Model
     fields = fields.map{|k,v| [k.to_sym, v] }.to_h
     @guid = fields.delete(:id) || SecureRandom.uuid
     @fields = {}.merge(fields)
+    @listeners = {}
   end
 
   def id
@@ -31,6 +32,19 @@ class Model
     when String
       @fields.merge(JSON.parse(json))
     end
+  end
+
+  def on(event, field_name, &block)
+    @listeners[event] ||= {}
+    @listeners[event][field_name] ||= []
+    @listeners[event][field_name] << block
+  end
+
+  def handle_event(event, field_name, value)
+    @listeners[event][field_name].each do |listener|
+      listener.call(value)
+    end
+    value
   end
 
   def self.create(fields, &block)
@@ -78,10 +92,11 @@ class Model
       end
 
       define_method(field_name + "=") do |value|
-        unless type_validator(type).validate(value, name)
+        unless type_validator(type).call(value, name)
           raise 'type error'
         end
         @fields[field_name.to_sym] = value
+        handle_event(:change, field_name.to_sym, value)
       end
     end
   end
@@ -96,6 +111,8 @@ class Model
         -> (value, name) { value.is_a? String }
       when :int
         -> (value, name) { value.is_a? Integer }
+      when :date
+        -> (value, name) { value.is_a? Date }
       when :reference
         -> (value, name) { valiedate_reference(value, name) }
     end
