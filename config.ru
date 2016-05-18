@@ -13,6 +13,7 @@ require_relative 'app/base/router'
 
 EventMachine.run do
   scheduler = ForgetMeNot::Scheduler.new
+  scheduler.reschedule(TimePeriod.now)
 
   ForgetMeNot::PeriodicTimer.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
