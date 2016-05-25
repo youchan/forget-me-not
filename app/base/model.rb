@@ -8,6 +8,8 @@ class String
 end
 
 class Model
+  attr_reader :fields
+
   def initialize(fields)
     fields = fields.map{|k,v| [k.to_sym, v] }.to_h
     @guid = fields.delete(:id) || SecureRandom.uuid
@@ -103,6 +105,10 @@ class Model
 
   def self.[](id)
     store.find(self, id)
+  end
+
+  def self.max(field_name)
+    store.max(self, field_name)
   end
 
   def type_validator(type)

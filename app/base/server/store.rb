@@ -55,6 +55,11 @@ class Store
     File.delete(filename) if File.exist?(filename)
   end
 
+  def max(model_class, field_name)
+    fetch(model_class)
+    @tables[model_class].reduce(nil) {|v, max| v.fields[field_name] < max ? max : v.fields[field_name] }
+  end
+
   def filename(model_class)
     @db_dir + "/#{model_class}.db"
   end

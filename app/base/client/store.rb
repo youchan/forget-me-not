@@ -60,4 +60,10 @@ class Store
   def delete(mdoel_class)
     @tables[model_class] = {}
   end
+
+  def max(model_class, field_name)
+    res = Browser::HTTP.get!("api/#{model_class}?order=#{field_name}")
+    model = model_class.new(res.json.last)
+    model.fields[field_name]
+  end
 end
