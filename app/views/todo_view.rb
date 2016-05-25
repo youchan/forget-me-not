@@ -1,9 +1,18 @@
 require_relative 'schedule_view'
 require_relative '../models/entry'
+require_relative '../base/hyalite/sortable'
+require_relative '../base/hyalite/proxy_component'
 
 class TodoView
   include Hyalite::Component
   include Hyalite::Component::ShortHand
+
+  TodoList = Hyalite::Sortable.create do |config|
+    config.wrap = Hyalite.fn {|props| ol({className:"selectable"}, props[:children]) }
+    config.component = Hyalite.fn {|props| li(nil, DescriptionView.el({entry: props[:entry]})) }
+    config.prop_key = :entry
+    config.sort_by(:order)
+  end
 
   def initial_state
     Entry.fetch(order: 'order') {|entries| set_state(entries: entries) }
@@ -11,7 +20,8 @@ class TodoView
   end
 
   def add_entry
-    entry = Entry.new(description: @state[:new_todo], pomodoro: 1)
+    max_order = Entry.max(:order)
+    entry = Entry.new(description: @state[:new_todo], pomodoro: 1, order: max_order + 1)
     entry.save do
       @state[:entries] << entry
       @state[:new_todo] = ''
@@ -41,9 +51,7 @@ class TodoView
           onChange: -> (event) { handle_change(event) },
           value: @state[:new_todo]),
         div({className: 'entries'},
-          div({className:"acc-content"},
-            ol({className:"selectable"}, li(nil, @state[:entries].map{|entry| DescriptionView.el({entry: entry})}))
-          )
+          div({className:"acc-content"}, TodoList.el(collection: @state[:entries]))
         )
       ),
       ScheduleView.el(nil),
