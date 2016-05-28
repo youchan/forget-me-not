@@ -1,4 +1,5 @@
 require_relative 'schedule_view'
+require_relative 'context_menu'
 require_relative '../models/entry'
 require_relative '../base/hyalite/sortable'
 require_relative '../base/hyalite/proxy_component'
@@ -9,14 +10,14 @@ class TodoView
 
   TodoList = Hyalite::Sortable.create do |config|
     config.wrap = Hyalite.fn {|props| ol({className:"selectable"}, props[:children]) }
-    config.component = Hyalite.fn {|props| li(nil, DescriptionView.el({entry: props[:entry]})) }
+    config.component = Hyalite.fn {|props| li(nil, DescriptionView.el({entry: props[:entry], popup: -> (evt) { props[:popup].call(evt, props[:entry]) }})) }
     config.prop_key = :entry
     config.sort_by(:order)
   end
 
   def initial_state
     Entry.fetch(order: 'order') {|entries| set_state(entries: entries) }
-    { new_todo: '', entries: [] }
+    { new_todo: '', entries: [], popup_visible: false, mouse_pos: {x:0,y:0} }
   end
 
   def add_entry
@@ -39,6 +40,32 @@ class TodoView
     end
   end
 
+  def handle_context_menu_on_select(type)
+    set_state(popup_visible: false)
+
+    index = @state[:entries].index(@current_entry)
+    case type
+    when :top
+      @state[:entries].delete(@current_entry)
+      @state[:entries].insert(0, @current_entry)
+    when :tail
+      @state[:entries].delete(@current_entry)
+      @state[:entries] << @current_entry
+    when :up
+      @state[:entries].delete(@current_entry)
+      @state[:entries].insert(index - 1, @current_entry)
+    when :down
+      @state[:entries].delete(@current_entry)
+      @state[:entries].insert(index + 1, @current_entry)
+    end
+
+    @state[:entries].each_with_index {|entry, i| entry.order = i + 1 }
+
+    Entry.save(@state[:entries]) do |entries|
+      set_state(entries: entries)
+    end
+  end
+
   def render
     div(nil,
       div({className: 'todo-view'},
@@ -51,11 +78,28 @@ class TodoView
           onChange: -> (event) { handle_change(event) },
           value: @state[:new_todo]),
         div({className: 'entries'},
-          div({className:"acc-content"}, TodoList.el(collection: @state[:entries]))
+          div({className:"acc-content"},
+            TodoList.el(
+              collection: @state[:entries],
+              popup: -> (evt, entry) {
+                @current_entry = entry
+                set_state(
+                  popup_visible: true,
+                  mouse_pos: { x: evt.offset.x + evt.target.position.x, y: evt.offset.y + evt.target.position.y }
+                )
+              }
+            )
+          )
         )
       ),
-      ScheduleView.el(nil),
-      br(className: 'clears')
+      ScheduleView.el,
+      br(className: 'clears'),
+      ContextMenu.el(
+        visible: @state[:popup_visible],
+        position: @state[:mouse_pos],
+        options: {top: "先頭へ", up:"1つ上", down:"1つ下", tail: "末尾に"},
+        onSelect: -> (type) { handle_context_menu_on_select(type) }
+      )
     )
   end
 end
@@ -66,7 +110,7 @@ class DescriptionView
 
   def render
     div({className:"description"},
-      @props[:entry].description,
+      span({className: 'description', onClick: -> (evt) { @props[:popup].call(evt) } }, @props[:entry].description),
       span({className: 'pomodoro'},
         @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
       )
