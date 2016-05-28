@@ -154,7 +154,7 @@ nav li a {
 }
 
 nav li.selected {
-    padding-bottom: 1px; 
+    padding-bottom: 1px;
     background: #8af;
 }
 
@@ -197,4 +197,29 @@ nav li.selected a {
   border-bottom: solid 1px #888;
   outline: none;
   margin-left: 12px;
+}
+
+.context-menu {
+  position: fixed;
+  display: none;
+  border: solid 1px #ddd;
+  background-color: #fff;
+}
+
+.context-menu.visible {
+  display: block;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-menu li {
+  padding: 0 8px;
+}
+
+.context-menu li:hover {
+  background-color: #ffe;
 }
