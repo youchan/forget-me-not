@@ -27,7 +27,7 @@ module Hyalite
 
     def render
       @config.wrap.el({className: 'hyalite-sortable'},
-        @props[:collection].sort_by(&@config.sort).map {|model| @config.component.el({@config.prop_key => model}) }
+        @props[:collection].sort_by(&@config.sort).map {|model| @config.component.el({@config.prop_key => model}.merge(@props)) }
       )
     end
 
