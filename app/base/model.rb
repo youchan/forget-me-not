@@ -21,6 +21,10 @@ class Model
     @guid
   end
 
+  def self.save(collection, &block)
+    self.store.save(collection, &block)
+  end
+
   def save(&block)
     self.class.store.save(self, &block)
   end
@@ -43,10 +47,14 @@ class Model
   end
 
   def handle_event(event, field_name, value)
-    @listeners[event][field_name].each do |listener|
+    get_listeners(event, field_name).each do |listener|
       listener.call(value)
     end
     value
+  end
+
+  def get_listeners(event, field_name)
+    @listeners[event].try {|l1| l1[field_name] || [] } || []
   end
 
   def self.create(fields, &block)

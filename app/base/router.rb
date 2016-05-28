@@ -26,9 +26,13 @@ class Router
 
         post "/#{resource_name}" do
           data = JSON.parse(request.body.read)
-          instance = model_class.new data.map{|key, value| [key.to_sym, value] }.to_h
-          instance.save
-          json data
+          results = data.map do |model|
+            instance = model_class.new model.map{|key, value| [key.to_sym, value] }.to_h
+            instance.save
+            instance
+          end
+
+          json results, json_encorder: :to_json
         end
       end
     end

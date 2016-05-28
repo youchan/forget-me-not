@@ -26,11 +26,22 @@ class Store
   end
 
   def save(model)
-    table = @tables[model.class]
-    Browser::HTTP.post("api/#{model.class.to_s}", model.to_json) do
+    is_array = model.is_a?(Array)
+    models = is_array ? model : [ model ]
+    model_class = models.first.class
+    table = @tables[model_class]
+    Browser::HTTP.post("api/#{model_class.to_s}", models.to_json) do
       on :success do |res|
-        table[model.id] = model.update(res.json)
-        yield model if block_given?
+        results = res.json.map do |value|
+          if table.has_key?(value[:id])
+            table[value[:id]].update(value)
+            table[value[:id]]
+          else
+            tables[value[:id]] = model_class.new(value)
+          end
+        end
+
+        yield(is_array ? results : results.first) if block_given?
       end
 
       on :failure do |res|

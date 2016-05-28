@@ -30,7 +30,13 @@ class Store
   end
 
   def save(model)
-    @tables[model.class][model.id] = model
+    is_array = model.is_a?(Array)
+    models = is_array ? model : [ model ]
+    model_class = models.first.class
+
+    models.each do |m|
+      @tables[model_class][m.id] = m
+    end
 
     File.open(filename(model.class), "w") do |file|
       file.write @tables[model.class].values.to_json
