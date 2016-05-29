@@ -78,9 +78,9 @@ class Model
   end
 
   def self.type_convert(key, value)
-    converted = case field_def[key].type
+    converted = case field_def[key.to_s].type
                 when :boolean
-                  value == 'true' ? true : false
+                  value.is_a?(String) ? (value == 'true' ? true : false) : value
                 else
                   value
                 end
