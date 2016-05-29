@@ -10,13 +10,19 @@ class TodoView
 
   TodoList = Hyalite::Sortable.create do |config|
     config.wrap = Hyalite.fn {|props| ol({className:"selectable"}, props[:children]) }
-    config.component = Hyalite.fn {|props| li(nil, DescriptionView.el({entry: props[:entry], popup: -> (evt) { props[:popup].call(evt, props[:entry]) }})) }
+    config.component = Hyalite.fn {|props| li(nil, DescriptionView.el(
+      {
+        entry: props[:entry],
+        popup: -> (evt) { props[:popup].call(evt, props[:entry]) },
+        onCheck: -> (evt, entry) { entry.done = evt.target.checked?; entry.save }
+      }
+    ))}
     config.prop_key = :entry
     config.sort_by(:order)
   end
 
   def initial_state
-    Entry.fetch(order: 'order') {|entries| set_state(entries: entries) }
+    Entry.fetch(filter: {done: false}, order: 'order') {|entries| set_state(entries: entries) }
     { new_todo: '', entries: [], popup_visible: false, mouse_pos: {x:0,y:0} }
   end
 
@@ -110,6 +116,7 @@ class DescriptionView
 
   def render
     div({className:"description"},
+      input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
       span({className: 'description', onClick: -> (evt) { @props[:popup].call(evt) } }, @props[:entry].description),
       span({className: 'pomodoro'},
         @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
