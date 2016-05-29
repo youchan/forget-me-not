@@ -199,6 +199,11 @@ nav li.selected a {
   margin-left: 12px;
 }
 
+.description.done {
+  color: #ddd;
+  text-decoration: line-through;
+}
+
 .context-menu {
   position: fixed;
   display: none;
