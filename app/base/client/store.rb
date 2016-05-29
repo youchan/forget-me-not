@@ -37,7 +37,7 @@ class Store
             table[value[:id]].update(value)
             table[value[:id]]
           else
-            tables[value[:id]] = model_class.new(value)
+            table[value[:id]] = model_class.new(value)
           end
         end
 
