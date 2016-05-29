@@ -38,8 +38,8 @@ class Store
       @tables[model_class][m.id] = m
     end
 
-    File.open(filename(model.class), "w") do |file|
-      file.write @tables[model.class].values.to_json
+    File.open(filename(model_class), "w") do |file|
+      file.write @tables[model_class].values.to_json
     end
 
     yield model if block_given?
