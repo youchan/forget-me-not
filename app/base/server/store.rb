@@ -48,7 +48,7 @@ class Store
   def fetch(model_class, filter: nil, order: nil)
     File.open filename(model_class) do |file|
       records = JSON.parse(file.read)
-      records.select! {|r| filter.all? {|k,v| r[k] == v } } if filter
+      records.select! {|r| filter.all? {|k,v| r[k.to_s] == v } } if filter
       records.sort_by!{|r| [order].flatten.map{|o| r[o.to_s] } } if order
       @tables[model_class] = records.map {|m| [m["id"], model_class.new(m)] }.to_h
     end
