@@ -21,6 +21,10 @@ class Model
     @guid
   end
 
+  def self.field_def
+    @field_def ||= {}
+  end
+
   def self.save(collection, &block)
     self.store.save(collection, &block)
   end
@@ -66,9 +70,20 @@ class Model
   end
 
   def self.fetch(filter: nil, order: nil)
+    filter = filter.map{|k, v| type_convert(k, v)  }.to_h if filter
     store.fetch(self, filter: filter, order: order) do |list|
       yield list if block_given?
     end
+  end
+
+  def self.type_convert(key, value)
+    converted = case field_def[key].type
+                when :boolean
+                  value == 'true' ? true : false
+                else
+                  value
+                end
+    [key, converted]
   end
 
   def self.store
@@ -79,7 +94,11 @@ class Model
     store.register(child)
   end
 
+  FieldDef = Struct.new(:name, :type, :params)
+
   def self.field(name, type, params = {})
+    field_def[name.to_s] = FieldDef.new(name, type, params)
+
     self.instance_eval do
       if type == :reference
         field_name = "#{name}_id"
@@ -125,6 +144,8 @@ class Model
         -> (value, name) { value.is_a? String }
       when :int
         -> (value, name) { value.is_a? Integer }
+      when :boolean
+        -> (value, name) { value == true || value == false }
       when :date
         -> (value, name) { value.is_a? Date }
       when :reference
