@@ -12,8 +12,9 @@ class Model
 
   def initialize(fields)
     fields = fields.map{|k,v| [k.to_sym, v] }.to_h
+    defaults = self.class.field_def.map{|k, d| [k, d.params[:default]] if d.params.has_key?(:default) }.compact.to_h
     @guid = fields.delete(:id) || SecureRandom.uuid
-    @fields = {}.merge(fields)
+    @fields = defaults.merge(fields)
     @listeners = {}
   end
 
