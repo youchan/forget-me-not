@@ -13,7 +13,8 @@ class TodoView
     config.component = Hyalite.fn {|props| li(nil, DescriptionView.el(
       {
         entry: props[:entry],
-        popup: -> (evt) { props[:popup].call(evt, props[:entry]) },
+        order_popup: -> (evt) { props[:order_popup].call(evt, props[:entry]) },
+        pomodoro_popup: -> (evt) { props[:pomodoro_popup].call(evt, props[:entry]) },
         onCheck: -> (evt, entry) { entry.done = evt.target.checked?; entry.save }
       }
     ))}
@@ -22,8 +23,11 @@ class TodoView
   end
 
   def initial_state
+    { new_todo: '', entries: [], order_popup_visible: false, pomodoro_popup_visible: false, mouse_pos: {x:0,y:0}, target_pos: {x:0,y:0} }
+  end
+
+  def component_did_mount
     Entry.fetch(filter: {done: false}, order: 'order') {|entries| set_state(entries: entries) }
-    { new_todo: '', entries: [], popup_visible: false, mouse_pos: {x:0,y:0} }
   end
 
   def add_entry
@@ -46,8 +50,15 @@ class TodoView
     end
   end
 
+  def handle_on_pomodoro_select(type)
+    set_state(pomodoro_popup_visible: false)
+
+    @current_entry.pomodoro = {one: 1, two: 2, three: 3, five: 5, eight: 8}[type]
+    @current_entry.save
+  end
+
   def handle_context_menu_on_select(type)
-    set_state(popup_visible: false)
+    set_state(order_popup_visible: false)
 
     index = @state[:entries].index(@current_entry)
     case type
@@ -87,11 +98,18 @@ class TodoView
           div({className:"acc-content"},
             TodoList.el(
               collection: @state[:entries],
-              popup: -> (evt, entry) {
+              order_popup: -> (evt, entry) {
                 @current_entry = entry
                 set_state(
-                  popup_visible: true,
+                  order_popup_visible: true,
                   mouse_pos: { x: evt.offset.x + evt.target.position.x, y: evt.offset.y + evt.target.position.y }
+                )
+              },
+              pomodoro_popup: -> (evt, entry) {
+                @current_entry = entry
+                set_state(
+                  pomodoro_popup_visible: true,
+                  target_pos: { x: evt.target.position.x, y: evt.target.position.y }
                 )
               }
             )
@@ -101,10 +119,16 @@ class TodoView
       ScheduleView.el,
       br(className: 'clears'),
       ContextMenu.el(
-        visible: @state[:popup_visible],
+        visible: @state[:order_popup_visible],
         position: @state[:mouse_pos],
         options: {top: "先頭へ", up:"1つ上", down:"1つ下", tail: "末尾に"},
         onSelect: -> (type) { handle_context_menu_on_select(type) }
+      ),
+      ContextMenu.el(
+        visible: @state[:pomodoro_popup_visible],
+        position: @state[:target_pos],
+        options: {one: "*", two:"**", three:"***", five: "*****"},
+        onSelect: -> (type) { handle_on_pomodoro_select(type) }
       )
     )
   end
@@ -115,21 +139,24 @@ class DescriptionView
   include Hyalite::Component::ShortHand
 
   def initial_state
-    { done: @props[:entry].done }
+    { done: @props[:entry].done, pomodoro: @props[:entry].pomodoro }
   end
 
   def component_did_mount
     @props[:entry].on(:change, :done) do |value|
       set_state(done: value)
     end
+    @props[:entry].on(:change, :pomodoro) do |value|
+      set_state(pomodoro: value)
+    end
   end
 
   def render
     div({className:"description"},
       input({type: 'checkbox', checked: @state[:done], onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
-      span({className: 'description' + (@state[:done] ? ' done' : ''), onClick: -> (evt) { @props[:popup].call(evt) } }, @props[:entry].description),
-      span({className: 'pomodoro'},
-        @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
+      span({className: 'description' + (@state[:done] ? ' done' : ''), onClick: -> (evt) { @props[:order_popup].call(evt) } }, @props[:entry].description),
+      span({className: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } },
+        @state[:pomodoro].times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
       )
     )
   end
