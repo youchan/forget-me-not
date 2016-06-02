@@ -80,6 +80,18 @@ body {
   height: 318px;
 }
 
+.entries {
+  position: absolute;
+  height: calc(100% - 41px);
+  width: 50%;
+}
+
+.acc-content {
+  overflow-y: scroll;
+  position: inherit;
+  height: inherit;
+}
+
 .koma {
   height: 40px;
   position: relative;
