@@ -138,25 +138,18 @@ class DescriptionView
   include Hyalite::Component
   include Hyalite::Component::ShortHand
 
-  def initial_state
-    { done: @props[:entry].done, pomodoro: @props[:entry].pomodoro }
-  end
-
   def component_did_mount
-    @props[:entry].on(:change, :done) do |value|
-      set_state(done: value)
-    end
-    @props[:entry].on(:change, :pomodoro) do |value|
-      set_state(pomodoro: value)
+    @props[:entry].on(:change, :done, :pomodoro) do |value|
+      force_update
     end
   end
 
   def render
     div({className:"description"},
-      input({type: 'checkbox', checked: @state[:done], onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
-      span({className: 'description' + (@state[:done] ? ' done' : ''), onClick: -> (evt) { @props[:order_popup].call(evt) } }, @props[:entry].description),
+      input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
+      span({className: 'description' + (@props[:entry].done ? ' done' : ''), onClick: -> (evt) { @props[:order_popup].call(evt) } }, @props[:entry].description),
       span({className: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } },
-        @state[:pomodoro].times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
+        @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
       )
     )
   end

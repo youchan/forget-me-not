@@ -45,10 +45,8 @@ class Model
     end
   end
 
-  def on(event, field_name, &block)
-    @listeners[event] ||= {}
-    @listeners[event][field_name] ||= []
-    @listeners[event][field_name] << block
+  def on(event, *field_names, &block)
+    field_names.each {|file_name| set_listener(event, file_name, &block) }
   end
 
   def handle_event(event, field_name, value)
@@ -56,10 +54,6 @@ class Model
       listener.call(value)
     end
     value
-  end
-
-  def get_listeners(event, field_name)
-    @listeners[event].try {|l1| l1[field_name] || [] } || []
   end
 
   def self.create(fields, &block)
@@ -163,5 +157,17 @@ class Model
 
   def to_json(arg)
     @fields.merge(id: @guid).to_json
+  end
+
+  private
+
+  def get_listeners(event, field_name)
+    @listeners[event].try {|l1| l1[field_name] || [] } || []
+  end
+
+  def set_listener(event, field_name, &block)
+    @listeners[event] ||= {}
+    @listeners[event][field_name] ||= []
+    @listeners[event][field_name] << block
   end
 end
