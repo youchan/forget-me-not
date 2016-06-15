@@ -2,7 +2,6 @@ require_relative 'schedule_view'
 require_relative 'context_menu'
 require_relative '../models/entry'
 require_relative '../base/hyalite/sortable'
-require_relative '../base/hyalite/proxy_component'
 
 class TodoView
   include Hyalite::Component
