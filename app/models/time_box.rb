@@ -1,6 +1,6 @@
-require_relative '../base/model'
+require 'menilite/model'
 
-class TimeBox < Model
+class TimeBox < Menilite::Model
   field :entry, :reference
   field :pomodoro, :int
   field :start_at, :int

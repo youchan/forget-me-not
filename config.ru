@@ -2,21 +2,41 @@ require 'bundler/setup'
 Bundler.require(:default)
 
 require 'eventmachine'
+require 'menilite'
 
 require_relative 'app'
-require_relative 'app/base/server/store'
 require_relative 'app/scheduler'
 require_relative 'app/periodic_timer'
 require_relative 'app/models/entry'
 require_relative 'app/models/time_box'
-require_relative 'app/base/router'
+require_relative 'app/notification'
 
 EventMachine.run do
   scheduler = ForgetMeNot::Scheduler.new
   scheduler.reschedule(TimePeriod.now)
 
+  notification = Notification.new
+
   ForgetMeNot::PeriodicTimer.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
+
+    on(:rest) do
+      begin
+        notification.send("25分働きました。休憩しましょう。")
+      rescue => e
+        puts e.message
+        puts e.backtrace
+      end
+    end
+
+    on(:start) do
+      begin
+        notification.send("仕事をはじめてください。")
+      rescue => e
+        puts e.message
+        puts e.backtrace
+      end
+    end
   end
 
   app = Rack::Builder.app do
@@ -33,8 +53,12 @@ EventMachine.run do
     end
 
     map '/api' do
-      router = Router.new(Entry, TimeBox)
+      router = Menilite::Router.new(Entry, TimeBox)
       run router.routes
+    end
+
+    map '/line_bot' do
+      run notification.routes
     end
   end
 

@@ -137,6 +137,10 @@ class DescriptionView
   include Hyalite::Component
   include Hyalite::Component::ShortHand
 
+  def initial_state
+    { edit: false }
+  end
+
   def component_did_mount
     @props[:entry].on(:change, :done, :pomodoro) do |value|
       force_update
@@ -144,9 +148,14 @@ class DescriptionView
   end
 
   def render
+    description = @state[:edit] ?
+      input({className: 'edit-description', type: 'text', value: @props[:entry].description}) :
+      span({className: 'label-description' + (@props[:entry].done ? ' done' : ''), onClick: -> { set_state(edit: true) } }, @props[:entry].description)
+
     div({className:"description"},
       input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
-      span({className: 'description' + (@props[:entry].done ? ' done' : ''), onClick: -> (evt) { @props[:order_popup].call(evt) } }, @props[:entry].description),
+      description,
+      span({className: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } }, img(className: 'reorder', src: 'images/reorder.png')),
       span({className: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } },
         @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
       )

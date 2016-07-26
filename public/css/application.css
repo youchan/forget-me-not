@@ -198,8 +198,24 @@ nav li.selected a {
   width: 1em;
 }
 
+.todo-view img.edit {
+  width: 1em;
+}
+
+.todo-view img.reorder {
+  width: 1em;
+}
+
 .todo-view span.pomodoro {
-  margin-left: 1em;
+  margin-left: 0.3em;
+}
+
+.todo-view span.edit-todo {
+  margin-left: 0.3em;
+}
+
+.todo-view span.reorder-todo {
+  margin-left: 0.3em;
 }
 
 .todo-view input.new-todo {

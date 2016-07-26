@@ -1,6 +1,4 @@
-require_relative '../base/model'
-
-class Entry < Model
+class Entry < Menilite::Model
   field :description, :string
   field :pomodoro, :int
   field :order, :int

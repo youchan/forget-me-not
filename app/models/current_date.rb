@@ -1,5 +1,3 @@
-require_relative '../base/model'
-
-class CurrentDate < Model
+class CurrentDate < Menilite::Model
   field :date, :date
 end

@@ -1,5 +1,5 @@
 require 'hyalite'
-require_relative 'base/client/store'
+require 'menilite'
 require_relative 'models/entry'
 require_relative 'models/time_box'
 require_relative 'views/todo_view'
