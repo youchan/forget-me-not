@@ -1,6 +1,7 @@
 require 'opal'
 require 'opal/sprockets'
 require 'sinatra/base'
+require "sinatra/activerecord"
 
 module ForgetMeNot
   OPAL = Opal::Server.new {|s|

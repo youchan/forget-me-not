@@ -30,7 +30,7 @@ class TodoView
   end
 
   def add_entry
-    max_order = Entry.max(:order)
+    max_order = Entry.max(:order) || 0
     entry = Entry.new(description: @state[:new_todo], pomodoro: 1, order: max_order + 1)
     entry.save do
       @state[:entries] << entry
