@@ -5,19 +5,6 @@ GIT
     opal-router (0.0.1)
       opal (>= 0.3.44)
 
-PATH
-  remote: ../hyalite
-  specs:
-    hyalite (0.0.2)
-      opal
-      opal-browser
-
-PATH
-  remote: ../menilite
-  specs:
-    menilite (0.2.1)
-      sinatra-activerecord
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -40,9 +27,14 @@ GEM
     haml (4.0.7)
       tilt
     hike (1.2.3)
+    hyalite (0.0.2)
+      opal
+      opal-browser
     i18n (0.7.0)
     line-bot-api (0.1.6)
       rack (>= 1.6)
+    menilite (0.2.1)
+      sinatra-activerecord
     minitest (5.9.0)
     multi_json (1.11.2)
     opal (0.10.1)
@@ -95,9 +87,9 @@ PLATFORMS
 DEPENDENCIES
   eventmachine
   haml
-  hyalite!
+  hyalite
   line-bot-api
-  menilite!
+  menilite
   opal-router!
   rake
   sass

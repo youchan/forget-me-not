@@ -9,8 +9,8 @@ gem 'sinatra-activerecord'
 gem 'thin'
 
 gem 'opal-router',    github: 'adambeynon/opal-router'
-gem 'hyalite', path: '../hyalite'
-gem 'menilite', path: '../menilite'
+gem 'hyalite'
+gem 'menilite'
 
 gem 'sqlite3'
 
