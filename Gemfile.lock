@@ -8,14 +8,14 @@ GIT
 PATH
   remote: ../hyalite
   specs:
-    hyalite (0.0.1)
+    hyalite (0.0.2)
       opal
       opal-browser
 
 PATH
   remote: ../menilite
   specs:
-    menilite (0.1.0)
+    menilite (0.2.1)
       sinatra-activerecord
 
 GEM

@@ -7,8 +7,6 @@ require 'menilite'
 require_relative 'app'
 require_relative 'app/scheduler'
 require_relative 'app/periodic_timer'
-require_relative 'app/models/entry'
-require_relative 'app/models/time_box'
 require_relative 'app/notification'
 
 EventMachine.run do
@@ -53,8 +51,8 @@ EventMachine.run do
     end
 
     map '/api' do
-      router = Menilite::Router.new(Entry, TimeBox)
-      run router.routes
+      router = Menilite::Router.new
+      run router.routes(settings)
     end
 
     map '/line_bot' do
