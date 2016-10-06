@@ -30,10 +30,10 @@ class ScheduleView
       div({className: 'schedule-inner'},
         ('06'..'23').map {|i|
           [ div({className: 'koma even'}, p(nil, "#{i}:00"),
-            time_boxes["#{i}:00"] && time_boxes["#{i}:00"].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
+            time_boxes["#{i}00".to_i] && time_boxes["#{i}00".to_i].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
           ),
           div({className: 'koma odd'}, p(nil, ":30"),
-            time_boxes["#{i}:30"] && time_boxes["#{i}:30"].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
+            time_boxes["#{i}30".to_i] && time_boxes["#{i}30".to_i].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
           )]
         }.flatten
       ),

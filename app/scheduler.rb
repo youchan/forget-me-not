@@ -26,13 +26,13 @@ module ForgetMeNot
           duration = @scope.end - at
           pomodoro = entry.pomodoro
           while duration < pomodoro
-            time_boxes << TimeBox.new(entry_id: entry.id, pomodoro: duration, date: date, start_at: at.to_s)
+            time_boxes << TimeBox.new(entry_id: entry.id, pomodoro: duration, date: date, start_at: at.to_i)
             at = @scope.begin
             date = date.next_day
             pomodoro -= duration
             duration = @scope.end - @scope.begin
           end
-          time_boxes << TimeBox.new(entry_id: entry.id, pomodoro: pomodoro, date: date, start_at: at.to_s)
+          time_boxes << TimeBox.new(entry_id: entry.id, pomodoro: pomodoro, date: date, start_at: at.to_i)
           at = at.next(pomodoro)
         end
 
