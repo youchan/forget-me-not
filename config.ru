@@ -10,7 +10,7 @@ require_relative 'app/periodic_timer'
 require_relative 'app/notification'
 
 EventMachine.run do
-  scheduler = ForgetMeNot::Scheduler.new
+  scheduler = ForgetMeNot::Scheduler.new(TimePeriod.new(1100)..TimePeriod.new(1900))
   scheduler.reschedule(TimePeriod.now)
 
   notification = Notification.new
