@@ -22,7 +22,7 @@ class TodoView
   end
 
   def initial_state
-    { new_todo: '', entries: [], order_popup_visible: false, pomodoro_popup_visible: false, mouse_pos: {x:0,y:0}, target_pos: {x:0,y:0} }
+    { entries: [], order_popup_visible: false, pomodoro_popup_visible: false, mouse_pos: {x:0,y:0}, target_pos: {x:0,y:0} }
   end
 
   def component_did_mount
@@ -31,16 +31,12 @@ class TodoView
 
   def add_entry
     max_order = Entry.max(:order) || 0
-    entry = Entry.new(description: @state[:new_todo], pomodoro: 1, order: max_order + 1)
+    entry = Entry.new(description: @refs['new-todo'].value, pomodoro: 1, order: max_order + 1)
     entry.save do
       @state[:entries] << entry
-      @state[:new_todo] = ''
       set_state(@state)
+      @refs['new-todo'].value = ''
     end
-  end
-
-  def handle_change(event)
-    set_state(new_todo: event.target.value)
   end
 
   def handle_input_on_keydown(event)
@@ -91,8 +87,7 @@ class TodoView
           className: 'new-todo',
           type: 'text',
           onKeyDown: -> (event) { handle_input_on_keydown(event) },
-          onChange: -> (event) { handle_change(event) },
-          value: @state[:new_todo]),
+          ref: 'new-todo'),
         div({className: 'entries'},
           div({className:"acc-content"},
             TodoList.el(
