@@ -47,6 +47,7 @@ class TodoView
 
   def handle_on_pomodoro_select(type)
     set_state(pomodoro_popup_visible: false)
+    return unless type
 
     @current_entry.pomodoro = {one: 1, two: 2, three: 3, five: 5, eight: 8}[type]
     @current_entry.save
@@ -54,6 +55,7 @@ class TodoView
 
   def handle_context_menu_on_select(type)
     set_state(order_popup_visible: false)
+    return unless type
 
     index = @state[:entries].index(@current_entry)
     case type
