@@ -19,3 +19,5 @@ gem 'sass'
 
 gem 'eventmachine'
 gem 'line-bot-api'
+
+gem 'pry'

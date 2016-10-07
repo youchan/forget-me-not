@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+
+require 'menilite'
+require 'sinatra/activerecord'
+
+Dir[File.expand_path('../../app/models/', __FILE__) + '/**/*.rb'].each {|file| require(file) }
+Dir[File.expand_path('../../app/controllers/', __FILE__) + '/**/*.rb'].each {|file| require(file) }
+
+require "pry"
+Pry.start
