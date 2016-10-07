@@ -256,3 +256,7 @@ nav li.selected a {
 .context-menu li:hover {
   background-color: #ffe;
 }
+
+.context-menu img.pomodoro {
+  width: 1em;
+}

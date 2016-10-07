@@ -121,8 +121,25 @@ class TodoView
       ContextMenu.el(
         visible: @state[:pomodoro_popup_visible],
         position: @state[:target_pos],
-        options: {one: "*", two:"**", three:"***", five: "*****"},
+        options: {one: 1, two: 2, three: 3, five: 5, eight: 8},
+        cellComponent: PomodoroCell,
         onSelect: -> (type) { handle_on_pomodoro_select(type) }
+      )
+    )
+  end
+end
+
+class PomodoroCell
+  include Hyalite::Component
+  include Hyalite::Component::ShortHand
+
+  def render
+    length = @props[:value]
+    div({},
+      span({className: 'pomodoro'},
+        length < 5 ?
+          length.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') } :
+          [ img(className: 'pomodoro', src: 'images/pomodoro.png'), span(nil, " x #{length}") ]
       )
     )
   end
@@ -147,12 +164,16 @@ class DescriptionView
       input({className: 'edit-description', type: 'text', value: @props[:entry].description}) :
       span({className: 'label-description' + (@props[:entry].done ? ' done' : ''), onClick: -> { set_state(edit: true) } }, @props[:entry].description)
 
+    pomodoro = @props[:entry].pomodoro
+
     div({className:"description"},
       input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
       description,
       span({className: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } }, img(className: 'reorder', src: 'images/reorder.png')),
       span({className: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } },
-        @props[:entry].pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') }
+        pomodoro < 5 ?
+          pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') } :
+          [img(className: 'pomodoro', src: 'images/pomodoro.png'), span(nil, " x #{pomodoro}") ]
       )
     )
   end
