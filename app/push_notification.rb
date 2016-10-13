@@ -23,24 +23,11 @@ module ForgetMeNot
       if RUBY_ENGINE == 'opal'
         def connect(&block)
           socket = WSWrapper.new("ws://#{$window.location.host}/push_notification/start/#{name}")
-          @sockets << socket
-          setup_listener(socket, &block)
-          socket.on(:open) { block.call(self) } if block
+          setup_connection(socket, &block)
         end
       else
         def connect(socket, &block)
-          @sockets << socket
-          setup_listener(socket, &block)
-          socket.on(:open) { block.call(self) } if block
-        end
-      end
-
-
-      def setup_listener(socket)
-        socket.on(:message) do |message|
-          (cmd, _, body) = message.partition(': ')
-          p @listeners[cmd]
-          @listeners[cmd].each {|l| l.call(cmd, body) } if @listeners[cmd]
+          setup_connection(socket, &block)
         end
       end
 
@@ -52,6 +39,22 @@ module ForgetMeNot
 
       def on_receive(command, &block)
         (@listeners[command] ||= []) << block
+      end
+
+      private
+
+      def setup_connection(socket, &block)
+        @sockets << socket
+        setup_listener(socket, &block)
+        socket.on(:open) { block.call(self) } if block
+        socket.on(:close) { @sockets.delete(socket) }
+      end
+
+      def setup_listener(socket)
+        socket.on(:message) do |message|
+          (cmd, _, body) = message.partition(': ')
+          @listeners[cmd].each {|l| l.call(cmd, body) } if @listeners[cmd]
+        end
       end
     end
   end
