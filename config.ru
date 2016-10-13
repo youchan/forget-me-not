@@ -8,6 +8,7 @@ require_relative 'app'
 require_relative 'app/scheduler'
 require_relative 'app/periodic_timer'
 require_relative 'app/notification'
+require_relative 'app/push_notification'
 
 EventMachine.run do
   scheduler = ForgetMeNot::Scheduler.new(TimePeriod.new(1100)..TimePeriod.new(1900))
@@ -17,6 +18,11 @@ EventMachine.run do
 
   ForgetMeNot::PeriodicTimer.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
+
+    on(:rest) do
+      channel = ForgetMeNot::PushNotification.channel(:forget_me_not)
+      channel.send('EVENT', 'rest')
+    end
 
     on(:rest) do
       begin

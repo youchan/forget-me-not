@@ -2,6 +2,7 @@ require 'opal'
 require 'opal/sprockets'
 require 'sinatra/base'
 require "sinatra/activerecord"
+require_relative 'app/server/ws_wrapper'
 
 module ForgetMeNot
   OPAL = Opal::Server.new {|s|
@@ -19,6 +20,13 @@ module ForgetMeNot
 
     get '/' do
       haml :index
+    end
+
+    get '/push_notification/start/:channel' do
+      request.websocket do |ws|
+        channel = ForgetMeNot::PushNotification.channel(params[:channel])
+        channel.connect(WSWrapper.new(ws))
+      end
     end
 
     get "/favicon.ico" do

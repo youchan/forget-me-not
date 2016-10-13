@@ -5,6 +5,7 @@ gem 'rake'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'sinatra-activerecord'
+gem 'sinatra-websocket'
 
 gem 'thin'
 
