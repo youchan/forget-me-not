@@ -8,7 +8,7 @@ module ForgetMeNot
   module PushNotification
     def self.channel(key)
       @channel ||= {}
-      @channel[:key] ||= Channel.new(key)
+      @channel[key] ||= Channel.new(key)
     end
 
     class Channel

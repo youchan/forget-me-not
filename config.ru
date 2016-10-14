@@ -20,7 +20,7 @@ EventMachine.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
 
     on(:rest) do
-      channel = ForgetMeNot::PushNotification.channel(:forget_me_not)
+      channel = ForgetMeNot::PushNotification.channel('forget_me_not')
       channel.send('EVENT', 'rest')
     end
 
