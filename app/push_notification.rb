@@ -53,7 +53,7 @@ module ForgetMeNot
       def setup_listener(socket)
         socket.on(:message) do |message|
           (cmd, _, body) = message.partition(': ')
-          @listeners[cmd].each {|l| l.call(cmd, body) } if @listeners[cmd]
+          @listeners[cmd].each {|l| l.call(body) } if @listeners[cmd]
         end
       end
     end
