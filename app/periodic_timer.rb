@@ -29,7 +29,7 @@ module ForgetMeNot
 
         case now.min
         when 25, 55
-          @handlers[:rest]&.each {|handler| handler.call }
+          @handlers[:break]&.each {|handler| handler.call }
         when 00, 30
           @handlers[:start]&.each {|handler| handler.call }
         end

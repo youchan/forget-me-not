@@ -16,10 +16,10 @@ EventMachine.run do
   ForgetMeNot::PeriodicTimer.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
 
-    on(:rest) do
+    on(:break) do
       scheduler.reschedule(TimePeriod.now)
       channel = ForgetMeNot::PushNotification.channel('forget_me_not')
-      channel.send('EVENT', 'rest')
+      channel.send('EVENT', 'break')
     end
   end
 
