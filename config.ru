@@ -7,14 +7,11 @@ require 'menilite'
 require_relative 'app'
 require_relative 'app/scheduler'
 require_relative 'app/periodic_timer'
-require_relative 'app/notification'
 require_relative 'app/push_notification'
 
 EventMachine.run do
   scheduler = ForgetMeNot::Scheduler.new(TimePeriod.new(1100)..TimePeriod.new(1900))
   scheduler.reschedule(TimePeriod.now)
-
-  notification = Notification.new
 
   ForgetMeNot::PeriodicTimer.run do
     on(:start) { scheduler.reschedule(TimePeriod.now) }
@@ -23,24 +20,6 @@ EventMachine.run do
       scheduler.reschedule(TimePeriod.now)
       channel = ForgetMeNot::PushNotification.channel('forget_me_not')
       channel.send('EVENT', 'rest')
-    end
-
-    on(:rest) do
-      begin
-        notification.send("25分働きました。休憩しましょう。")
-      rescue => e
-        puts e.message
-        puts e.backtrace
-      end
-    end
-
-    on(:start) do
-      begin
-        notification.send("仕事をはじめてください。")
-      rescue => e
-        puts e.message
-        puts e.backtrace
-      end
     end
   end
 
@@ -60,10 +39,6 @@ EventMachine.run do
     map '/api' do
       router = Menilite::Router.new
       run router.routes(settings)
-    end
-
-    map '/line_bot' do
-      run notification.routes
     end
   end
 
