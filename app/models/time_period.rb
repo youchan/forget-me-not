@@ -8,7 +8,7 @@ class TimePeriod
 
   def succ
     min = @minute + @interval
-    hour = @hour + (min / 60)
+    hour = (@hour + (min / 60)).floor
     minute = min % 60
     TimePeriod.new(hour * 100 + minute, @interval)
   end
@@ -18,7 +18,7 @@ class TimePeriod
   end
 
   def -(other)
-    (self.total_minutes - other.total_minutes) / @interval
+    ((self.total_minutes - other.total_minutes) / @interval).floor
   end
 
   def total_minutes
@@ -26,7 +26,7 @@ class TimePeriod
   end
 
   def self.from_minutes(minutes, interval=30)
-    hour = minutes / 60
+    hour = (minutes / 60).floor
     minute = minutes % 60
     TimePeriod.new(hour * 100 + minute, interval)
   end
@@ -50,13 +50,13 @@ class TimePeriod
       @hour = $1.to_i
       @minute = $2.to_i
     when Integer
-      @hour = time / 100
+      @hour = (time / 100).floor
       @minute = time % 100
     end
   end
 
   def self.now(interval = 30)
     now = Time.now
-    TimePeriod.from_minutes((now.hour * 60 + now.min) / interval * interval, interval)
+    TimePeriod.from_minutes(((now.hour * 60 + now.min) / interval).floor * interval, interval)
   end
 end
