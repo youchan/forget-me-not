@@ -5,6 +5,13 @@ GIT
     opal-router (0.0.1)
       opal (>= 0.3.44)
 
+PATH
+  remote: ../hyalite
+  specs:
+    hyalite (0.0.3)
+      opal
+      opal-browser
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -32,9 +39,6 @@ GEM
     haml (4.0.7)
       tilt
     hike (1.2.3)
-    hyalite (0.0.2)
-      opal
-      opal-browser
     i18n (0.7.0)
     line-bot-api (0.1.6)
       rack (>= 1.6)
@@ -102,7 +106,7 @@ PLATFORMS
 DEPENDENCIES
   eventmachine
   haml
-  hyalite
+  hyalite!
   line-bot-api
   menilite
   opal-router!
