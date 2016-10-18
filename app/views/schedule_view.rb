@@ -8,7 +8,7 @@ class ScheduleView
   include Hyalite::Component::ShortHand
 
   state :time_boxes, []
-  state :now, TimePeriod.new(1200)
+  state :now, TimePeriod.now
 
   def initialize
     @channel = ForgetMeNot::PushNotification.channel('forget_me_not')
@@ -48,7 +48,8 @@ class ScheduleView
               p(nil, tp.minute == 0 ? tp.to_s : ':30'),
               time_boxes[tp.to_i] && time_boxes[tp.to_i].map {|tb|
                 div({class: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)
-              }
+              },
+              (@state.now == tp ? div({class: 'line-time-current'}) : nil)
             ].compact.flatten
           )
         end

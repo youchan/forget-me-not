@@ -80,6 +80,15 @@ body {
   height: 318px;
 }
 
+.line-time-current {
+  position: absolute;
+  top: -1px;
+  left: 60px;
+  right: 0;
+  border-top: solid 3px #eaa;
+  z-index: 2;
+}
+
 .entries {
   position: absolute;
   height: calc(100% - 41px);
