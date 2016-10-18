@@ -1,4 +1,6 @@
 class TimePeriod
+  include Comparable
+
   attr_reader :hour, :minute
 
   def initialize(time, interval=30)
@@ -46,7 +48,7 @@ class TimePeriod
   def time=(time)
     case time
     when String
-      raise "parse error: #{time}"  unless /\A(\d{2}):(\d{2})\z/ =~ time
+      raise ArgumentError.new("parse error: #{time}")  unless /\A(\d{2}):?(\d{2})\z/ =~ time
       @hour = $1.to_i
       @minute = $2.to_i
     when Integer
@@ -58,5 +60,11 @@ class TimePeriod
   def self.now(interval = 30)
     now = Time.now
     TimePeriod.from_minutes(((now.hour * 60 + now.min) / interval).floor * interval, interval)
+  end
+
+  def to(dest)
+    start = self.to_i
+    last = dest.to_i
+    start.step(last, @interval).map{|i| TimePeriod.new(i) }.to_enum
   end
 end

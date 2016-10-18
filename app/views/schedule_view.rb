@@ -1,28 +1,32 @@
 require 'date'
 require_relative '../models/current_date'
+require_relative '../models/time_period'
 require_relative 'date_view'
 
 class ScheduleView
   include Hyalite::Component
   include Hyalite::Component::ShortHand
 
+  state :time_boxes, []
+  state :now, TimePeriod.new(1200)
+
   def initialize
     @channel = ForgetMeNot::PushNotification.channel('forget_me_not')
     @current_date = CurrentDate.new(date: Date.today)
   end
 
-  def initial_state
-    fetch_time_boxes(Date.today)
-    { time_boxes: [] }
-  end
-
   def component_did_mount
+    fetch_time_boxes(Date.today)
     @current_date.on(:change, :date) do |date|
       fetch_time_boxes(date)
     end
 
-    @channel.on_receive('EVENT') do |mesg|
-      fetch_time_boxes(@current_date.date)
+    @channel.on_receive('BREAK') do |mesg|
+      @current_date.date = Date.today
+    end
+
+    @channel.on_receive('START') do |mesg|
+      @state.now = TimePeriod.new(mesg)
     end
   end
 
@@ -33,20 +37,22 @@ class ScheduleView
   end
 
   def render
-    time_boxes = @state[:time_boxes].group_by(&:start_at)
+    time_boxes = @state.time_boxes.group_by(&:start_at)
 
     div({className: 'schedule'},
       DateView.el(date: @current_date),
-      div({className: 'schedule-inner'},
-        ('06'..'23').map {|i|
-          [ div({className: 'koma even'}, p(nil, "#{i}:00"),
-            time_boxes["#{i}00".to_i] && time_boxes["#{i}00".to_i].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
-          ),
-          div({className: 'koma odd'}, p(nil, ":30"),
-            time_boxes["#{i}30".to_i] && time_boxes["#{i}30".to_i].map{|tb| div({className: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)}
-          )]
-        }.flatten
-      ),
+      div({class: 'schedule-inner'},
+        (TimePeriod.new(600)..TimePeriod.new(2300)).map do |tp|
+          div({class: "koma #{tp.minute == 0 ? 'even' : 'odd'}"},
+            [
+              p(nil, tp.minute == 0 ? tp.to_s : ':30'),
+              time_boxes[tp.to_i] && time_boxes[tp.to_i].map {|tb|
+                div({class: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)
+              }
+            ].compact.flatten
+          )
+        end
+      )
     )
   end
 end
