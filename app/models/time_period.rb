@@ -48,7 +48,7 @@ class TimePeriod
   def time=(time)
     case time
     when String
-      raise ArgumentError.new("parse error: #{time}")  unless /\A(\d{2}):?(\d{2})\z/ =~ time
+      raise ArgumentError.new("parse error: #{time}")  unless /^(\d{2}):?(\d{2})$/ =~ time
       @hour = $1.to_i
       @minute = $2.to_i
     when Integer
