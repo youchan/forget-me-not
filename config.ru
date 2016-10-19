@@ -1,5 +1,12 @@
 require 'bundler/setup'
-Bundler.require(:default)
+
+if ENV['SPEED_UP']
+  Bundler.require(:default, :speed_up)
+  require_relative 'app/speed_up'
+  SpeedUp.start
+else
+  Bundler.require(:default)
+end
 
 require 'eventmachine'
 require 'menilite'

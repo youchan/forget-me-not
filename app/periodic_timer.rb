@@ -24,6 +24,8 @@ module ForgetMeNot
 
       last_processed_at = nil
       EventMachine.add_periodic_timer(5) do
+        SpeedUp.next if defined? SpeedUp
+
         now = Time.now
         next if last_processed_at && last_processed_at.hour == now.hour && last_processed_at.min == now.min
 

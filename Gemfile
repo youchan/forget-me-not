@@ -22,3 +22,5 @@ gem 'eventmachine'
 gem 'line-bot-api'
 
 gem 'pry'
+
+gem 'timecop', group: :speed_up
