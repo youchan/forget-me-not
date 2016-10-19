@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804035829) do
+ActiveRecord::Schema.define(version: 20161007120531) do
 
   create_table "entries", force: :cascade do |t|
     t.string  "guid"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20160804035829) do
     t.integer "pomodoro"
     t.integer "start_at"
     t.date    "date"
+    t.integer "status",     default: 0, null: false
   end
 
 end
