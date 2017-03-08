@@ -56,6 +56,10 @@ GEM
       sourcemap (~> 0.1.0)
       sprockets (~> 3.1)
       tilt (>= 1.4)
+    opal-browser (0.2.0)
+      opal
+      paggio
+    paggio (0.2.6)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -111,6 +115,7 @@ DEPENDENCIES
   hyalite!
   line-bot-api
   menilite!
+  opal-browser
   opal-router!
   pry
   rake

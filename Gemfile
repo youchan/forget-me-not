@@ -10,6 +10,7 @@ gem 'sinatra-websocket'
 gem 'thin'
 
 gem 'opal-router',    github: 'adambeynon/opal-router'
+gem 'opal-browser'
 gem 'hyalite', path: '../hyalite'
 gem 'menilite', path: '../menilite'
 

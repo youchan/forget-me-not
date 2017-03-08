@@ -1,4 +1,5 @@
 require 'opal'
+require 'opal/browser'
 require 'opal/sprockets'
 require 'sinatra/base'
 require "sinatra/activerecord"
@@ -8,6 +9,7 @@ module ForgetMeNot
   OPAL = Opal::Server.new {|s|
     s.append_path 'app'
     Opal.use_gem 'hyalite'
+    Opal.use_gem 'opal-browser'
     Opal.paths.each {|path| s.append_path path }
 
     s.main = 'application'
