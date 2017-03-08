@@ -11,7 +11,7 @@ gem 'thin'
 
 gem 'opal-router',    github: 'adambeynon/opal-router'
 gem 'hyalite', path: '../hyalite'
-gem 'menilite'
+gem 'menilite', path: '../menilite'
 
 gem 'sqlite3'
 

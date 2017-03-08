@@ -8,73 +8,74 @@ GIT
 PATH
   remote: ../hyalite
   specs:
-    hyalite (0.0.3)
+    hyalite (0.0.6)
       opal
-      opal-browser
+
+PATH
+  remote: ../menilite
+  specs:
+    menilite (0.4.2)
+      opal
+      sinatra-activerecord
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.0.0)
-      activesupport (= 5.0.0)
-    activerecord (5.0.0)
-      activemodel (= 5.0.0)
-      activesupport (= 5.0.0)
+    activemodel (5.0.2)
+      activesupport (= 5.0.2)
+    activerecord (5.0.2)
+      activemodel (= 5.0.2)
+      activesupport (= 5.0.2)
       arel (~> 7.0)
-    activesupport (5.0.0)
+    activesupport (5.0.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.4.0)
-    arel (7.1.1)
+    addressable (2.5.0)
+      public_suffix (~> 2.0, >= 2.0.2)
+    arel (7.1.4)
     backports (3.6.8)
     coderay (1.1.1)
-    concurrent-ruby (1.0.2)
-    daemons (1.2.3)
+    concurrent-ruby (1.0.5)
+    daemons (1.2.4)
     em-websocket (0.3.8)
       addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
-    eventmachine (1.0.9.1)
+    eventmachine (1.2.3)
     haml (4.0.7)
       tilt
     hike (1.2.3)
-    i18n (0.7.0)
-    line-bot-api (0.1.6)
-      rack (>= 1.6)
-    menilite (0.2.1)
-      sinatra-activerecord
+    i18n (0.8.1)
+    line-bot-api (1.1.0)
     method_source (0.8.2)
-    minitest (5.9.0)
-    multi_json (1.11.2)
-    opal (0.10.1)
+    minitest (5.10.1)
+    multi_json (1.12.1)
+    opal (0.10.3)
       hike (~> 1.2)
       sourcemap (~> 0.1.0)
       sprockets (~> 3.1)
       tilt (>= 1.4)
-    opal-browser (0.2.0)
-      opal
-      paggio
-    paggio (0.2.6)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    rack (1.6.4)
+    public_suffix (2.0.5)
+    rack (1.6.5)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (11.2.2)
-    sass (3.4.21)
-    sinatra (1.4.7)
+    rake (12.0.0)
+    sass (3.4.23)
+    sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    sinatra-activerecord (2.0.10)
+    sinatra-activerecord (2.0.12)
       activerecord (>= 3.2)
-      sinatra (~> 1.0)
-    sinatra-contrib (1.4.6)
+      sinatra (>= 1.0)
+    sinatra-contrib (1.4.7)
       backports (>= 2.0)
       multi_json
       rack-protection
@@ -87,16 +88,16 @@ GEM
       thin (>= 1.3.1, < 2.0.0)
     slop (3.6.0)
     sourcemap (0.1.1)
-    sprockets (3.7.0)
+    sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sqlite3 (1.3.11)
-    thin (1.6.4)
+    sqlite3 (1.3.13)
+    thin (1.7.0)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
-      rack (~> 1.0)
-    thread_safe (0.3.5)
-    tilt (2.0.5)
+      rack (>= 1, < 3)
+    thread_safe (0.3.6)
+    tilt (2.0.6)
     timecop (0.8.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -109,7 +110,7 @@ DEPENDENCIES
   haml
   hyalite!
   line-bot-api
-  menilite
+  menilite!
   opal-router!
   pry
   rake
@@ -123,4 +124,4 @@ DEPENDENCIES
   timecop
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
