@@ -40,6 +40,21 @@ module ForgetMeNot
       end
     end
 
+    def break(at, date = Date.today)
+      time_box = TimeBox.find(date: date, start_at: at.to_i, status: :scheduled)
+      if time_box
+        confirm = TimeBox.find(entry_id: time_box.entry.id, status: :confirm)
+        if confirm
+          confirm.update(date: date, start_at: at.to_i, pomodoro: 30)
+        else
+          TimeBox.create(entry_id: time_box.entry.id, date: date, start_at: at.to_i, pomodoro: 30, status: :confirm)
+        end
+      end
+    rescue => e
+      pp e
+      raise
+    end
+
     def offset_schedule
 
     end

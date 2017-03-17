@@ -25,7 +25,7 @@ module ForgetMeNot
     get '/push_notification/start/:channel' do
       request.websocket do |ws|
         channel = ForgetMeNot::PushNotification.channel(params[:channel])
-        channel.connect(WSWrapper.new(ws))
+        channel.connect(ForgetMeNot::WebSocket.new(ws))
       end
     end
 

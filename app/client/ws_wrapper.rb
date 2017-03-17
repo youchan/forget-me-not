@@ -1,17 +1,22 @@
-class WSWrapper
-  def initialize(url)
-    @ws = Browser::Socket.new(url)
-  end
-
-  def on(event, &block)
-    if event == :message
-      @ws.on(event) {|message| block.call(message.data) }
-    else
-      @ws.on(event, &block)
+module ForgetMeNot
+  class WebSocket
+    def initialize(url)
+      @native = Native(`new WebSocket(#{url})`)
     end
-  end
 
-  def send(msg)
-    @ws.write(msg)
+    def on(event, &block)
+      case event
+      when :message
+        @native.onmessage = Proc.new{|e| p e; block.call(e.data) }
+      when :open
+        @native.onopen = Proc.new{|e| block.call(e) }
+      when :close
+        @native.onclose = Proc.new{|e| block.call(e) }
+      end
+    end
+
+    def send(msg)
+      @native.write(msg)
+    end
   end
 end

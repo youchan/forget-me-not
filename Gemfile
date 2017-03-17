@@ -9,9 +9,10 @@ gem 'sinatra-websocket'
 
 gem 'thin'
 
+gem 'opal-browser'
 gem 'opal-router',    github: 'adambeynon/opal-router'
 gem 'hyalite', path: '../hyalite'
-gem 'menilite'
+gem 'menilite', path: '../menilite'
 
 gem 'sqlite3'
 
@@ -22,5 +23,6 @@ gem 'eventmachine'
 gem 'line-bot-api'
 
 gem 'pry'
+gem 'pry-byebug'
 
 gem 'timecop', group: :speed_up
