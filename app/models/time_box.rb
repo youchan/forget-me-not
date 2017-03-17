@@ -1,11 +1,12 @@
 require 'menilite/model'
+require_relative './entry.rb'
 
 class TimeBox < Menilite::Model
-  field :entry, :reference
+  field :entry, :reference, class: ::Entry
   field :pomodoro, :int
   field :start_at, :int
   field :date, :date
-  field :status, :int
+  field :status, enum: %i(scheduled confirm done)
 
   def start_oclock
     self.start_at / 100
@@ -13,23 +14,5 @@ class TimeBox < Menilite::Model
 
   def start_min
     self.start_at % 100
-  end
-
-  def status=(v)
-    int_value = 0
-    case v
-    when :scheduled
-      int_value = 0
-    when :confirm
-      int_value = 1
-    when :done
-      int_value = 2
-    end
-
-    super int_value
-  end
-
-  def status
-    %i(scheduled confirm done)[super]
   end
 end

@@ -31,7 +31,7 @@ class ScheduleView
   end
 
   def fetch_time_boxes(date)
-    TimeBox.fetch(filter: {date: date}) do |time_boxes|
+    TimeBox.fetch!(filter: {date: date}, includes: :entry) do |time_boxes|
       set_state(time_boxes: time_boxes)
     end
   end
@@ -47,7 +47,7 @@ class ScheduleView
             [
               p(nil, tp.minute == 0 ? tp.to_s : ':30'),
               time_boxes[tp.to_i] && time_boxes[tp.to_i].map {|tb|
-                div({class: "time-box pomodoro-#{tb.pomodoro}"}, tb.entry.description)
+                div({class: "time-box pomodoro-#{tb.pomodoro} #{tb.status}"}, tb.entry.description)
               },
               (@state.now == tp ? div({class: 'line-time-current'}) : nil)
             ].compact.flatten

@@ -1,6 +1,4 @@
 if RUBY_ENGINE == 'opal'
-  require 'browser/socket'
-  require 'browser/location'
   require_relative 'client/ws_wrapper'
 end
 
@@ -22,7 +20,7 @@ module ForgetMeNot
 
       if RUBY_ENGINE == 'opal'
         def connect(&block)
-          socket = WSWrapper.new("ws://#{$window.location.host}/push_notification/start/#{name}")
+          socket = ForgetMeNot::WebSocket.new("ws://#{`window.location.host`}/push_notification/start/#{name}")
           setup_connection(socket, &block)
         end
       else

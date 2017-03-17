@@ -48,6 +48,10 @@ body {
   z-index: 1;
 }
 
+.time-box.confirm {
+  background-color: #fafaf0;
+}
+
 .time-box.pomodoro-1 {
   height: 38px;
 }

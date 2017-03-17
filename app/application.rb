@@ -5,11 +5,13 @@ require_relative 'models/time_box'
 require_relative 'views/todo_view'
 require_relative 'push_notification'
 
+Hyalite::Logger.log_level = :debug
+
 class App
   include Hyalite::Component::ShortHand
 
   def self.render
-    Hyalite.render(TodoView.el, $document["#todo-tab"])
+    Hyalite.render(TodoView.el, $document["#todo-tab"].first)
   end
 end
 
