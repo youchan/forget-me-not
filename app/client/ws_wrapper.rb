@@ -7,11 +7,11 @@ module ForgetMeNot
     def on(event, &block)
       case event
       when :message
-        @native.onmessage = Proc.new{|e| p e; block.call(e.data) }
+        @native.onmessage = Proc.new{|e| block.call(Native(e).data) }
       when :open
-        @native.onopen = Proc.new{|e| block.call(e) }
+        @native.onopen = Proc.new{|e| block.call(Native(e)) }
       when :close
-        @native.onclose = Proc.new{|e| block.call(e) }
+        @native.onclose = Proc.new{|e| block.call(Native(e)) }
       end
     end
 

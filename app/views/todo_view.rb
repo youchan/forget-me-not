@@ -26,21 +26,22 @@ class TodoView
   end
 
   def component_did_mount
-    Entry.fetch(filter: {done: false}, order: 'order') {|entries| set_state(entries: entries) }
+    Entry.fetch!(filter: {done: false}, order: 'order') {|entries| set_state(entries: entries) }
   end
 
   def add_entry
-    max_order = Entry.max(:order) || 0
-    entry = Entry.new(description: @refs['new-todo'].value, pomodoro: 1, order: max_order + 1)
-    entry.save do
-      @state[:entries] << entry
-      set_state(@state)
-      @refs['new-todo'].value = ''
+    Entry.max!(:order) do |max_order|
+      entry = Entry.new(description: @refs['new-todo'].value, pomodoro: 1, order: max_order + 1)
+      entry.save do
+        @state[:entries] << entry
+        set_state(@state)
+        @refs['new-todo'].value = ''
+      end
     end
   end
 
   def handle_input_on_keydown(event)
-    if event.code == 13
+    if event.code == :Enter
       add_entry
     end
   end

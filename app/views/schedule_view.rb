@@ -31,7 +31,7 @@ class ScheduleView
   end
 
   def fetch_time_boxes(date)
-    TimeBox.fetch(filter: {date: date}) do |time_boxes|
+    TimeBox.fetch!(filter: {date: date}, includes: :entry) do |time_boxes|
       set_state(time_boxes: time_boxes)
     end
   end

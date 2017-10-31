@@ -40,6 +40,10 @@ EventMachine.run do
       run ForgetMeNot::App.new(host: 'localhost')
     end
 
+    map '/push_notification' do
+      use ForgetMeNot::PushNotification::RackApp
+    end
+
     map '/assets' do
       run ForgetMeNot::OPAL.sprockets
     end

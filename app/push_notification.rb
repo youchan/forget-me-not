@@ -9,6 +9,15 @@ module ForgetMeNot
       @channel[key] ||= Channel.new(key)
     end
 
+    class RackApp
+      def initialize(app)
+        @app = app
+      end
+
+      def call(env)
+      end
+    end
+
     class Channel
       attr_reader :name
 
