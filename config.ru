@@ -36,20 +36,18 @@ EventMachine.run do
   end
 
   app = Rack::Builder.app do
+    server = ForgetMeNot::App.new(host: 'localhost')
+
     map '/' do
-      run ForgetMeNot::App.new(host: 'localhost')
+      run server
     end
 
-    map '/push_notification' do
-      use ForgetMeNot::PushNotification::RackApp
-    end
+    # map '/push_notification' do
+    #   use ForgetMeNot::PushNotification::RackApp
+    # end
 
     map '/assets' do
-      run ForgetMeNot::OPAL.sprockets
-    end
-
-    map '/__OPAL_SOURCE_MAPS__' do
-      run Opal::SourceMapServer.new(ForgetMeNot::OPAL.sprockets, '/__OPAL_SOURCE_MAPS__')
+      run server.settings.opal.sprockets
     end
 
     map '/api' do

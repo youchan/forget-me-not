@@ -1,4 +1,4 @@
-class CreateTableTimeBoxes < ActiveRecord::Migration
+class CreateTableTimeBoxes < ActiveRecord::Migration[5.2]
   def change
     create_table :time_boxes do |t|
       t.string :guid

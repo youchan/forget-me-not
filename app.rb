@@ -5,7 +5,7 @@ require "sinatra/activerecord"
 require_relative 'app/server/ws_wrapper'
 
 module ForgetMeNot
-  OPAL = Opal::Server.new {|s|
+  OPAL = Opal::Sprockets::Server.new {|s|
     s.append_path 'app'
     Opal.use_gem 'hyalite'
     Opal.paths.each {|path| s.append_path path }
