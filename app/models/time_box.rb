@@ -1,5 +1,5 @@
 require 'menilite/model'
-require_relative './entry.rb'
+require_relative 'entry.rb'
 
 class TimeBox < Menilite::Model
   field :entry, :reference, class: ::Entry
