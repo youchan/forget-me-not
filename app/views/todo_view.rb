@@ -31,6 +31,7 @@ class TodoView
 
   def add_entry
     Entry.max!(:order) do |max_order|
+      max_order ||= 0
       entry = Entry.new(description: @refs['new-todo'].value, pomodoro: 1, order: max_order + 1)
       entry.save do
         @state[:entries] << entry
@@ -81,32 +82,52 @@ class TodoView
     end
   end
 
+  def context_menu
+    if @state[:order_popup_visible]
+      ContextMenu.el(
+        position: @state[:mouse_pos],
+        options: {top: "先頭へ", up:"1つ上", down:"1つ下", tail: "末尾に"},
+        onSelect: -> (type) { handle_context_menu_on_select(type) }
+      )
+    elsif @state[:pomodoro_popup_visible]
+      ContextMenu.el(
+        position: @state[:target_pos],
+        options: {one: 1, two: 2, three: 3, five: 5, eight: 8},
+        cellComponent: PomodoroCell,
+        onSelect: -> (type) { handle_on_pomodoro_select(type) }
+      )
+    else
+      nil
+    end
+  end
+
   def render
     div(nil,
-      div({className: 'todo-view'},
+      div({class: 'todo-view'},
         label({'for': 'new-todo'}, 'Todo:'),
         input(
           id: 'new-todo',
-          className: 'new-todo',
+          class: 'new-todo',
           type: 'text',
           onKeyDown: -> (event) { handle_input_on_keydown(event) },
           ref: 'new-todo'),
-        div({className: 'entries'},
-          div({className:"acc-content"},
+        div({class: 'entries'},
+          div({class:"acc-content"},
             TodoList.el(
               collection: @state[:entries],
               order_popup: -> (evt, entry) {
+                pp evt
                 @current_entry = entry
                 set_state(
                   order_popup_visible: true,
-                  mouse_pos: { x: evt.offset.x + evt.target.position.x, y: evt.offset.y + evt.target.position.y }
+                  mouse_pos: { x: evt.offset.x + evt.target.left, y: evt.offset.y + evt.target.top }
                 )
               },
               pomodoro_popup: -> (evt, entry) {
                 @current_entry = entry
                 set_state(
                   pomodoro_popup_visible: true,
-                  target_pos: { x: evt.target.position.x, y: evt.target.position.y }
+                  target_pos: { x: evt.target.left, y: evt.target.top }
                 )
               }
             )
@@ -114,20 +135,8 @@ class TodoView
         )
       ),
       ScheduleView.el,
-      br(className: 'clears'),
-      ContextMenu.el(
-        visible: @state[:order_popup_visible],
-        position: @state[:mouse_pos],
-        options: {top: "先頭へ", up:"1つ上", down:"1つ下", tail: "末尾に"},
-        onSelect: -> (type) { handle_context_menu_on_select(type) }
-      ),
-      ContextMenu.el(
-        visible: @state[:pomodoro_popup_visible],
-        position: @state[:target_pos],
-        options: {one: 1, two: 2, three: 3, five: 5, eight: 8},
-        cellComponent: PomodoroCell,
-        onSelect: -> (type) { handle_on_pomodoro_select(type) }
-      )
+      br(class: 'clears'),
+      context_menu
     )
   end
 end
@@ -162,22 +171,27 @@ class DescriptionView
     end
   end
 
-  def render
-    description = @state[:edit] ?
-      input({className: 'edit-description', type: 'text', value: @props[:entry].description}) :
-      span({className: 'label-description' + (@props[:entry].done ? ' done' : ''), onClick: -> { set_state(edit: true) } }, @props[:entry].description)
-
+  def description
+    @state[:edit] ?
+      input({class: 'edit-description', type: 'text', value: @props[:entry].description}) :
+      span({class: 'label-description' + (@props[:entry].done ? ' done' : ''), onClick: -> { set_state(edit: true) } }, @props[:entry].description)
+  end
+  
+  def pomodoro_list
     pomodoro = @props[:entry].pomodoro
+    pomodoro < 5 ?
+      pomodoro.times.map{ img(class: 'pomodoro', src: 'images/pomodoro.png') } :
+      [img(class: 'pomodoro', src: 'images/pomodoro.png'), span(nil, " x #{pomodoro}") ]
+  end
 
-    div({className:"description"},
+  def render
+    div({class:"description"},
       input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
       description,
-      span({className: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } }, img(className: 'reorder', src: 'images/reorder.png')),
-      span({className: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } },
-        pomodoro < 5 ?
-          pomodoro.times.map{ img(className: 'pomodoro', src: 'images/pomodoro.png') } :
-          [img(className: 'pomodoro', src: 'images/pomodoro.png'), span(nil, " x #{pomodoro}") ]
-      )
+      span({class: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } },
+        img(class: 'reorder', src: 'images/reorder.png')
+      ),
+      span({class: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } }, pomodoro_list)
     )
   end
 end

@@ -23,10 +23,10 @@ class ContextMenu
 
   def handle_item_click(event)
     target = event.target
-    until target.data['label']
+    until target.data("label")
       target = target.parent
     end
-    @props[:onSelect].call(target.data["label"]) if @props[:onSelect]
+    @props[:onSelect].call(target.data("label")) if @props[:onSelect]
   end
 
   def close
@@ -36,9 +36,10 @@ class ContextMenu
   def render
     x = @props[:position][:x]
     y = @props[:position][:y]
+    puts "#{x}, #{y}"
     display = @props[:visible] ? 'block' : 'none'
 
-    div({ class: "modal", style: { 'padding-top': "#{y}px", 'padding-left': "#{x}px", display: display }, onClick: self.method(:close) },
+    div({ class: "modal", style: { 'padding-top': "#{y}px", 'padding-left': "#{x}px", display: 'block' }, onClick: self.method(:close) },
       div({ className: 'context-menu' },
         ul(nil,
           @props[:options].map {|k, v|
