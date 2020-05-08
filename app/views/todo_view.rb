@@ -104,19 +104,19 @@ class TodoView
   def render
     div(nil,
       div({class: 'todo-view'},
-        label({'for': 'new-todo'}, 'Todo:'),
-        input(
-          id: 'new-todo',
-          class: 'new-todo',
-          type: 'text',
-          onKeyDown: -> (event) { handle_input_on_keydown(event) },
-          ref: 'new-todo'),
+        div({class: 'todo-input'},
+          label({'for': 'new-todo'}, 'Todo:'),
+          input(
+            id: 'new-todo',
+            class: 'new-todo',
+            type: 'text',
+            onKeyDown: -> (event) { handle_input_on_keydown(event) },
+            ref: 'new-todo')),
         div({class: 'entries'},
           div({class:"acc-content"},
             TodoList.el(
               collection: @state[:entries],
               order_popup: -> (evt, entry) {
-                pp evt
                 @current_entry = entry
                 set_state(
                   order_popup_visible: true,

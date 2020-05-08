@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  background-color: #ffe;
   overflow: hidden;
 }
 
@@ -19,10 +18,13 @@ body {
   float: left;
   position: relative;
   height: 100%;
-  width: 50%;
+  width: 30%;
 }
 
 .date-control {
+  height: 1rem;
+  padding: 1rem 0;
+  margin: 4px 0;
 }
 
 .date-control p {
@@ -31,10 +33,13 @@ body {
 }
 
 .schedule-inner {
-  border: solid 1px #aaa;
-  height: calc(100% - 24px);
+  height: calc(100vh - 76px - 3rem);
   overflow-y: scroll;
   clear: both;
+}
+
+.schedule-inner::-webkit-scrollbar {
+  display: none;
 }
 
 .time-box {
@@ -95,14 +100,17 @@ body {
 
 .entries {
   position: absolute;
-  height: calc(100% - 41px);
+  height: calc(100vh - 76px - 3rem);
   width: 50%;
 }
 
 .acc-content {
   overflow-y: scroll;
-  position: inherit;
   height: inherit;
+}
+
+.acc-content::-webkit-scrollbar {
+  display: none;
 }
 
 .koma {
@@ -128,9 +136,9 @@ body {
 
 .navbar-inner {
   padding: 0 20px;
-  background-color: #9cf;
+  background-color: #97D5D9;
   margin-bottom: 8px;
-  min-height: 80px;
+  min-height: 58px;
 }
 
 .container-narrow {
@@ -141,7 +149,6 @@ body {
 .navbar img.icon {
   float: right;
   padding: 10px;
-  margin-top: 10px;
   width: 40px;
   border-radius: 40px;
 }
@@ -149,7 +156,7 @@ body {
 .navbar img.logo {
   float: left;
   padding: 10px;
-  height: 64px;
+  height: 38px;
 }
 
 .navbar .title {
@@ -187,24 +194,14 @@ nav li.selected a {
     color: #fff;
 }
 
-.tab-content {
-  border: 1px solid #8af;
-  padding: 8px;
-  background-color: #fff;
-}
-
-#todo-tab {
-  position: relative;
-  height: calc(100vh - 162px);
-}
-
-#todo-tab>div {
-  height: 100%;
-}
-
 .todo-view {
     float: left;
-    width: 50%;
+    width: 70%;
+}
+
+.todo-view .todo-input {
+  height: 3rem;
+  margin: 4px 0;
 }
 
 .todo-view img.pomodoro {
@@ -220,6 +217,8 @@ nav li.selected a {
 }
 
 .todo-view span.pomodoro {
+  position: absolute;
+  right: 2rem;
   margin-left: 0.3em;
 }
 
@@ -235,9 +234,16 @@ nav li.selected a {
   font-size: 32px;
   width: 80%;
   border: none;
-  border-bottom: solid 1px #888;
+  border-bottom: solid 1px #a8a8a8;
   outline: none;
   margin-left: 12px;
+}
+
+.description {
+  border: solid 1px #a8a8a8;
+  border-radius: 3px;
+  height: 4rem;
+  padding: 8px;
 }
 
 .description.done {

@@ -9,19 +9,10 @@
     %header
       .navbar
         .navbar-inner
-          .container-narrow
-            %img{src: 'images/forget-me-not.png'}
-            %img.icon{src: 'images/youchan_square.jpg'}
-      %nav.container-narrow
-        %ul
-          %li.selected
-            %a{href:"#todoTab"} Todo
-          %li
-            %a{href:"#calendarTab"} Calendar
-      %br.clears
+          %img.logo{src: 'images/forget-me-not.png'}
+          %img.icon{src: 'images/youchan_square.jpg'}
     %section
       .container-narrow
-        .tab-content
-          #todo-tab
+        #todo-tab
 
     = ::Opal::Sprockets.javascript_include_tag('application', sprockets: settings.opal.sprockets, prefix: 'assets', debug: true)
