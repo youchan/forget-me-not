@@ -120,14 +120,14 @@ class TodoView
                 @current_entry = entry
                 set_state(
                   order_popup_visible: true,
-                  mouse_pos: { x: evt.offset.x + evt.target.left, y: evt.offset.y + evt.target.top }
+                  mouse_pos: { x: evt.offset.x + evt.target.clientRect.left, y: evt.offset.y + evt.target.clientRect.top }
                 )
               },
               pomodoro_popup: -> (evt, entry) {
                 @current_entry = entry
                 set_state(
                   pomodoro_popup_visible: true,
-                  target_pos: { x: evt.target.left, y: evt.target.top }
+                  target_pos: { x: evt.offset.x + evt.target.clientRect.left, y: evt.offset.y + evt.target.clientRect.top }
                 )
               }
             )

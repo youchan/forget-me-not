@@ -36,7 +36,6 @@ class ContextMenu
   def render
     x = @props[:position][:x]
     y = @props[:position][:y]
-    puts "#{x}, #{y}"
     display = @props[:visible] ? 'block' : 'none'
 
     div({ class: "modal", style: { 'padding-top': "#{y}px", 'padding-left': "#{x}px", display: 'block' }, onClick: self.method(:close) },
