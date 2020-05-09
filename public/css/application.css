@@ -18,7 +18,7 @@ body {
   float: left;
   position: relative;
   height: 100%;
-  width: 30%;
+  width: 35%;
 }
 
 .date-control {
@@ -101,7 +101,7 @@ body {
 .entries {
   position: absolute;
   height: calc(100vh - 76px - 3rem);
-  width: 50%;
+  width: 100%;
 }
 
 .acc-content {
@@ -166,37 +166,39 @@ body {
 }
 
 nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 nav li {
-    display: block;
-    float: left;
-    background: #aaa;
-    border-width: 1px 1px 0 1px;
-    margin: 0 5px 0 0;
+  display: block;
+  float: left;
+  background: #aaa;
+  border-width: 1px 1px 0 1px;
+  margin: 0 5px 0 0;
 }
 
 nav li a {
-    padding: 0 10px;
-    color: #444;
-    text-decoration: none;
+  padding: 0 10px;
+  color: #444;
+  text-decoration: none;
 }
 
 nav li.selected {
-    padding-bottom: 1px;
-    background: #8af;
+  padding-bottom: 1px;
+  background: #8af;
 }
 
 nav li.selected a {
-    color: #fff;
+  color: #fff;
 }
 
 .todo-view {
-    float: left;
-    width: 70%;
+  position: relative;
+  float: left;
+  width: calc(65% - 24px);
+  margin-right: 24px;
 }
 
 .todo-view .todo-input {
@@ -232,7 +234,6 @@ nav li.selected a {
 
 .todo-view input.new-todo {
   font-size: 32px;
-  width: 80%;
   border: none;
   border-bottom: solid 1px #a8a8a8;
   outline: none;
