@@ -4,6 +4,7 @@ gem 'rake'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'activerecord', "~> 5.2"
 gem 'sinatra-activerecord'
 gem 'sinatra-websocket'
 
@@ -11,11 +12,11 @@ gem 'thin'
 
 gem "opal-haml"
 gem 'opal-browser'
-gem 'opal-router',    github: 'adambeynon/opal-router'
-gem 'hyalite' #, path: '../hyalite'
-gem 'menilite' #, path: '../menilite'
+gem 'opal-router', github: 'adambeynon/opal-router'
+gem 'hyalite', path: "../hyalite"
+gem 'menilite'
 
-gem 'sqlite3'
+gem "sqlite3"
 
 gem 'haml'
 gem 'sass'
