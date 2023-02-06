@@ -14,7 +14,7 @@ class TodoView
         entry: props[:entry],
         order_popup: -> (evt) { props[:order_popup].call(evt, props[:entry]) },
         pomodoro_popup: -> (evt) { props[:pomodoro_popup].call(evt, props[:entry]) },
-        onCheck: -> (evt, entry) { entry.done = evt.target.checked?; entry.save }
+        onCheck: -> (evt, entry) { entry.done = evt.target[:checked]; entry.save }
       }
     ))}
     config.prop_key = :entry
@@ -120,14 +120,14 @@ class TodoView
                 @current_entry = entry
                 set_state(
                   order_popup_visible: true,
-                  mouse_pos: { x: evt.offset.x + evt.target.clientRect.left, y: evt.offset.y + evt.target.clientRect.top }
+                  mouse_pos: { x: evt.offset.x + evt.target.client_rect.left, y: evt.offset.y + evt.target.client_rect.top }
                 )
               },
               pomodoro_popup: -> (evt, entry) {
                 @current_entry = entry
                 set_state(
                   pomodoro_popup_visible: true,
-                  target_pos: { x: evt.offset.x + evt.target.clientRect.left, y: evt.offset.y + evt.target.clientRect.top }
+                  target_pos: { x: evt.offset.x + evt.target.client_rect.left, y: evt.offset.y + evt.target.client_rect.top }
                 )
               }
             )
@@ -186,12 +186,16 @@ class DescriptionView
 
   def render
     div({class:"description"},
-      input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
-      description,
-      span({class: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } },
-        img(class: 'reorder', src: 'images/reorder.png')
+      p({},
+        input({type: 'checkbox', checked: @props[:entry].done, onChange: -> (evt) { @props[:onCheck].call(evt, @props[:entry]) }}),
+        description,
+        span({class: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } }, pomodoro_list)
       ),
-      span({class: 'pomodoro', onClick: -> (evt) { @props[:pomodoro_popup].call(evt) } }, pomodoro_list)
+      p({},
+        span({class: 'reorder-todo', onClick: -> (evt) {  @props[:order_popup].call(evt) } },
+          img(class: 'reorder', src: 'images/reorder.png')
+        )
+      )
     )
   end
 end
