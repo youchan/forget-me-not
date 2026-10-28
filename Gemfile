@@ -61,4 +61,4 @@ group :development do
   gem "web-console"
 end
 
-gem "webauthn", "~> 3.4"
+gem "webauthn", "~> 3.5"
