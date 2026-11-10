@@ -1,0 +1,9 @@
+<% content_for :title, "タスク" %>
+<% content_for :head do %>
+  <%# PicoRuby.wasm はページ遷移ごとに起動し直す必要があるので、Turbo Drive では来ずに必ずフルロードさせる %>
+  <meta name="turbo-visit-control" content="reload">
+<% end %>
+
+<%= funicular_app_container class: "fmn-app" %>
+<script type="application/x-mrb" src="<%= asset_path("app.mrb") %>"></script>
+<%= picoruby_include_tag %>

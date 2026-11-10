@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def new
-    redirect_to todos_path if logged_in?
+    redirect_to tasks_path if logged_in?
   end
 
   # POST /sessions/options
@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
       session.delete(:webauthn_authentication)
       session[:user_id] = passkey.user_id
 
-      render json: { redirect_to: todos_path }
+      render json: { redirect_to: tasks_path }
     rescue WebAuthn::Error => e
       render json: { error: "ログインに失敗したで: #{e.message}" }, status: :unprocessable_content
     end

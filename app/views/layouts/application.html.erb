@@ -25,7 +25,7 @@
 
   <body>
     <header class="container mx-auto px-5 pt-5 flex justify-between items-center">
-      <%= link_to "Forget Me Not", logged_in? ? todos_path : sign_in_path, class: "font-bold text-xl" %>
+      <%= link_to "Forget Me Not", logged_in? ? tasks_path : sign_in_path, class: "font-bold text-xl" %>
       <% if logged_in? %>
         <div class="flex items-center gap-4">
           <span class="text-gray-600"><%= current_user.email %></span>

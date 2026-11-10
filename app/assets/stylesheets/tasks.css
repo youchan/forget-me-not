@@ -1,0 +1,126 @@
+/* タスク画面（app/funicular/）のスタイル。既存画面の Tailwind の配色に合わせている */
+.fmn-board {
+  --fmn-ink: #111827;        /* gray-900 */
+  --fmn-muted: #6b7280;      /* gray-500 */
+  --fmn-line: #e5e7eb;       /* gray-200 */
+  --fmn-soft: #f9fafb;       /* gray-50 */
+  --fmn-primary: #2563eb;    /* blue-600 */
+  --fmn-primary-hover: #3b82f6;
+  --fmn-danger: #dc2626;     /* red-600 */
+  --fmn-todo: #047857;       --fmn-todo-bg: #ecfdf5;     /* emerald */
+  --fmn-split: #c2410c;      --fmn-split-bg: #fff7ed;    /* orange */
+  --fmn-big: #1d4ed8;        --fmn-big-bg: #eff6ff;      /* blue */
+  --fmn-unest: #4b5563;      --fmn-unest-bg: #f3f4f6;    /* gray */
+  color: var(--fmn-ink);
+  max-width: 56rem;
+}
+
+.fmn-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.fmn-head__title { font-weight: 700; font-size: 2.25rem; line-height: 2.5rem; margin: 0; }
+.fmn-head__option { display: inline-flex; align-items: center; gap: .4rem; color: var(--fmn-muted); font-size: .875rem; cursor: pointer; }
+
+.fmn-error {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  margin-top: 1rem; padding: .5rem .75rem; border-radius: .375rem;
+  background: #fef2f2; color: var(--fmn-danger); font-weight: 500;
+}
+
+/* 追加フォーム */
+.fmn-new { display: flex; gap: .5rem; margin: 1.25rem 0 .75rem; flex-wrap: wrap; }
+.fmn-new__title {
+  flex: 1 1 16rem; min-width: 0; padding: .5rem .75rem;
+  border: 1px solid #9ca3af; border-radius: .375rem; font: inherit;
+}
+.fmn-new__title:focus, .fmn-new__estimate:focus, .fmn-editor__input:focus { outline: 2px solid var(--fmn-primary); outline-offset: -1px; }
+.fmn-new__estimate, .fmn-editor__input {
+  padding: .45rem .5rem; border: 1px solid #9ca3af; border-radius: .375rem; font: inherit; background: #fff;
+}
+.fmn-subform { margin: .25rem 0 .5rem 3.25rem; }
+.fmn-subform .fmn-new { margin: 0; }
+
+.fmn-btn {
+  padding: .5rem .875rem; border: none; border-radius: .375rem; font: inherit; font-weight: 500;
+  background: #f3f4f6; color: var(--fmn-ink); cursor: pointer;
+}
+.fmn-btn:hover { background: var(--fmn-soft); }
+.fmn-btn--primary { background: var(--fmn-primary); color: #fff; }
+.fmn-btn--primary:hover { background: var(--fmn-primary-hover); }
+
+/* サマリー */
+.fmn-summary { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+
+/* ツリー */
+.fmn-tree, .fmn-children { list-style: none; margin: 0; padding: 0; }
+.fmn-tree { border-top: 1px solid var(--fmn-line); }
+.fmn-children { margin-left: 1.5rem; border-left: 1px dashed var(--fmn-line); padding-left: .25rem; }
+.fmn-node { margin: 0; }
+
+.fmn-row {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .5rem .25rem; border-bottom: 1px solid var(--fmn-line);
+}
+.fmn-row:hover { background: var(--fmn-soft); }
+.fmn-toggle {
+  width: 1.5rem; flex: none; border: none; background: none; color: var(--fmn-muted);
+  font-size: .875rem; cursor: pointer; padding: 0; text-align: center;
+}
+.fmn-toggle--leaf { cursor: default; }
+.fmn-check { width: 1.1rem; height: 1.1rem; flex: none; accent-color: var(--fmn-primary); cursor: pointer; }
+.fmn-title {
+  flex: 1 1 auto; min-width: 0; text-align: left; border: none; background: none; padding: .125rem .25rem;
+  font: inherit; color: inherit; cursor: text; border-radius: .25rem; overflow-wrap: anywhere;
+}
+.fmn-title:hover { background: #fff; box-shadow: inset 0 0 0 1px var(--fmn-line); }
+.fmn-row--big > .fmn-title { font-weight: 600; }
+.fmn-row.is-done .fmn-title { color: var(--fmn-muted); text-decoration: line-through; }
+
+.fmn-badge {
+  flex: none; padding: .1rem .5rem; border-radius: 999px; font-size: .75rem; font-weight: 600;
+  border: none; white-space: nowrap; font-family: inherit;
+}
+.fmn-badge--todo { color: var(--fmn-todo); background: var(--fmn-todo-bg); }
+.fmn-badge--split { color: var(--fmn-split); background: var(--fmn-split-bg); }
+button.fmn-badge--split { cursor: pointer; box-shadow: inset 0 0 0 1px currentColor; }
+button.fmn-badge--split:hover { background: #ffedd5; }
+.fmn-badge--big { color: var(--fmn-big); background: var(--fmn-big-bg); }
+.fmn-badge--unestimated { color: var(--fmn-unest); background: var(--fmn-unest-bg); }
+.fmn-row.is-done .fmn-badge { opacity: .5; }
+
+.fmn-meta { flex: none; display: flex; gap: .6rem; align-items: center; font-size: .8125rem; color: var(--fmn-muted); white-space: nowrap; }
+.fmn-meta > span:empty { display: none; }
+.fmn-period.is-today { color: var(--fmn-split); font-weight: 600; }
+.fmn-period.is-overdue { color: var(--fmn-danger); font-weight: 600; }
+
+.fmn-icon {
+  flex: none; width: 1.75rem; height: 1.75rem; border: none; background: none; border-radius: .375rem;
+  color: var(--fmn-muted); font-size: 1rem; cursor: pointer; opacity: .35;
+}
+.fmn-row:hover .fmn-icon, .fmn-icon:focus-visible, .fmn-error .fmn-icon { opacity: 1; }
+.fmn-icon:hover { background: #fff; color: var(--fmn-ink); }
+.fmn-icon--danger:hover { color: var(--fmn-danger); }
+
+/* 詳細編集 */
+.fmn-editor {
+  margin: .25rem 0 .75rem 3.25rem; padding: 1rem; border: 1px solid var(--fmn-line);
+  border-radius: .5rem; background: var(--fmn-soft); display: grid; gap: .75rem;
+}
+.fmn-editor__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .75rem; }
+.fmn-editor__row { display: grid; gap: .25rem; }
+.fmn-editor__label { font-size: .8125rem; font-weight: 500; color: var(--fmn-muted); }
+.fmn-editor__input { width: 100%; box-sizing: border-box; }
+.fmn-editor__note { margin: 0; font-size: .8125rem; color: var(--fmn-muted); }
+.fmn-editor__actions { display: flex; gap: .5rem; }
+
+.fmn-empty { color: var(--fmn-muted); text-align: center; padding: 2.5rem 0; }
+
+@media (max-width: 640px) {
+  /* 1行目: 開閉・チェック・タイトル・操作ボタン / 2行目: 分類と見積もり・期間 */
+  .fmn-row { flex-wrap: wrap; row-gap: .25rem; }
+  .fmn-title { flex: 1 1 calc(100% - 9rem); }
+  .fmn-icon { order: 2; opacity: 1; }
+  .fmn-row .fmn-badge { order: 3; margin-left: 3.25rem; }
+  .fmn-meta { order: 4; flex: 1 1 auto; flex-wrap: wrap; white-space: normal; row-gap: 0; }
+  .fmn-children { margin-left: .75rem; }
+  .fmn-subform, .fmn-editor { margin-left: .5rem; }
+  .fmn-new__title { flex-basis: 100%; }
+}

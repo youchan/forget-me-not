@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :passkeys, dependent: :destroy
-  has_many :todos, dependent: :destroy
+  has_many :tasks, dependent: :destroy
 
   normalizes :email, with: ->(email) { email.strip.downcase }
 

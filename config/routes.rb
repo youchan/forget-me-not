@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :todos
+  resources :tasks, only: %i[ index create update destroy ]
+  # 旧 Todo の URL から来た場合
+  get "todos", to: redirect("/tasks")
 
   get "sign_up", to: "registrations#new", as: :sign_up
   post "registrations/options", to: "registrations#options", as: :registration_options
@@ -21,5 +23,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "todos#index"
+  root "tasks#index"
 end

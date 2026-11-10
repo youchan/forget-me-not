@@ -1,6 +1,6 @@
 class RegistrationsController < ApplicationController
   def new
-    redirect_to todos_path if logged_in?
+    redirect_to tasks_path if logged_in?
   end
 
   # POST /registrations/options
@@ -57,7 +57,7 @@ class RegistrationsController < ApplicationController
       session.delete(:webauthn_registration)
       session[:user_id] = user.id
 
-      render json: { redirect_to: todos_path }
+      render json: { redirect_to: tasks_path }
     rescue WebAuthn::Error => e
       render json: { error: "パスキーの登録に失敗したで: #{e.message}" }, status: :unprocessable_content
     rescue ActiveRecord::RecordInvalid => e

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_18_142120) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
   create_table "passkeys", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "external_id", null: false
@@ -23,13 +23,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_142120) do
     t.index ["user_id"], name: "index_passkeys_on_user_id"
   end
 
-  create_table "todos", force: :cascade do |t|
+  create_table "tasks", force: :cascade do |t|
     t.string "title", null: false
-    t.boolean "done", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
-    t.index ["user_id"], name: "index_todos_on_user_id"
+    t.integer "parent_id"
+    t.integer "position", default: 0, null: false
+    t.integer "estimate_pomodoros"
+    t.date "starts_on"
+    t.date "due_on"
+    t.datetime "completed_at"
+    t.index ["parent_id"], name: "index_tasks_on_parent_id"
+    t.index ["user_id", "parent_id", "position"], name: "index_tasks_on_user_id_and_parent_id_and_position"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -42,5 +49,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_142120) do
   end
 
   add_foreign_key "passkeys", "users"
-  add_foreign_key "todos", "users"
+  add_foreign_key "tasks", "tasks", column: "parent_id"
+  add_foreign_key "tasks", "users"
 end
