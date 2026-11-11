@@ -64,7 +64,7 @@ group :development do
   gem "dotenv-rails"
 end
 
-gem "webauthn", "~> 3.4"
+gem "webauthn", "~> 3.5"
 
 # Ruby で書くブラウザ側アプリ（PicoRuby.wasm）。破壊的変更が続いているのでバージョンを固定する
 gem "funicular", "0.5.2"
