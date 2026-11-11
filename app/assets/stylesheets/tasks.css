@@ -12,7 +12,8 @@
   --fmn-big: #1d4ed8;        --fmn-big-bg: #eff6ff;      /* blue */
   --fmn-unest: #4b5563;      --fmn-unest-bg: #f3f4f6;    /* gray */
   color: var(--fmn-ink);
-  max-width: 56rem;
+  max-width: 84rem;
+  margin: 0 auto;
 }
 
 .fmn-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
@@ -31,12 +32,10 @@
   flex: 1 1 16rem; min-width: 0; padding: .5rem .75rem;
   border: 1px solid #9ca3af; border-radius: .375rem; font: inherit;
 }
-.fmn-new__title:focus, .fmn-new__estimate:focus, .fmn-editor__input:focus { outline: 2px solid var(--fmn-primary); outline-offset: -1px; }
-.fmn-new__estimate, .fmn-editor__input {
+.fmn-new__title:focus, .fmn-new__estimate:focus, .fmn-detail__input:focus { outline: 2px solid var(--fmn-primary); outline-offset: -1px; }
+.fmn-new__estimate, .fmn-detail__input {
   padding: .45rem .5rem; border: 1px solid #9ca3af; border-radius: .375rem; font: inherit; background: #fff;
 }
-.fmn-subform { margin: .25rem 0 .5rem 3.25rem; }
-.fmn-subform .fmn-new { margin: 0; }
 
 .fmn-btn {
   padding: .5rem .875rem; border: none; border-radius: .375rem; font: inherit; font-weight: 500;
@@ -45,26 +44,42 @@
 .fmn-btn:hover { background: var(--fmn-soft); }
 .fmn-btn--primary { background: var(--fmn-primary); color: #fff; }
 .fmn-btn--primary:hover { background: var(--fmn-primary-hover); }
+.fmn-btn--danger { color: var(--fmn-danger); }
+.fmn-btn--danger:hover { background: #fef2f2; }
 
 /* サマリー */
 .fmn-summary { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
 
-/* ツリー */
-.fmn-tree, .fmn-children { list-style: none; margin: 0; padding: 0; }
-.fmn-tree { border-top: 1px solid var(--fmn-line); }
-.fmn-children { margin-left: 1.5rem; border-left: 1px dashed var(--fmn-line); padding-left: .25rem; }
+/* 2ペイン・ドリルダウン */
+.fmn-panes { display: flex; gap: 1.5rem; align-items: flex-start; }
+.fmn-pane { flex: 1 1 0; min-width: 0; }
+.fmn-pane--list { max-width: 39rem; }
+.fmn-pane--detail {
+  border: 1px solid var(--fmn-line); border-radius: .5rem; padding: 1.25rem;
+  background: #fff; min-height: 12rem;
+}
+
+.fmn-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; margin-bottom: .25rem; }
+.fmn-crumb {
+  border: none; background: none; font: inherit; color: var(--fmn-primary); cursor: pointer;
+  padding: .125rem .25rem; border-radius: .25rem; max-width: 12rem; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.fmn-crumb:hover { background: var(--fmn-soft); }
+.fmn-crumb.is-current { color: var(--fmn-ink); font-weight: 600; cursor: default; }
+.fmn-crumb-sep { color: var(--fmn-muted); }
+
+/* ツリー（左ペインの一覧・右ペインのサブタスク一覧の両方で使う） */
+.fmn-tree { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--fmn-line); }
 .fmn-node { margin: 0; }
+.fmn-row.is-selected { background: var(--fmn-todo-bg); }
+.fmn-chevron { flex: none; font-size: .8125rem; color: var(--fmn-muted); }
 
 .fmn-row {
   display: flex; align-items: center; gap: .5rem;
   padding: .5rem .25rem; border-bottom: 1px solid var(--fmn-line);
 }
 .fmn-row:hover { background: var(--fmn-soft); }
-.fmn-toggle {
-  width: 1.5rem; flex: none; border: none; background: none; color: var(--fmn-muted);
-  font-size: .875rem; cursor: pointer; padding: 0; text-align: center;
-}
-.fmn-toggle--leaf { cursor: default; }
 .fmn-check { width: 1.1rem; height: 1.1rem; flex: none; accent-color: var(--fmn-primary); cursor: pointer; }
 .fmn-title {
   flex: 1 1 auto; min-width: 0; text-align: left; border: none; background: none; padding: .125rem .25rem;
@@ -80,8 +95,6 @@
 }
 .fmn-badge--todo { color: var(--fmn-todo); background: var(--fmn-todo-bg); }
 .fmn-badge--split { color: var(--fmn-split); background: var(--fmn-split-bg); }
-button.fmn-badge--split { cursor: pointer; box-shadow: inset 0 0 0 1px currentColor; }
-button.fmn-badge--split:hover { background: #ffedd5; }
 .fmn-badge--big { color: var(--fmn-big); background: var(--fmn-big-bg); }
 .fmn-badge--unestimated { color: var(--fmn-unest); background: var(--fmn-unest-bg); }
 .fmn-row.is-done .fmn-badge { opacity: .5; }
@@ -99,28 +112,41 @@ button.fmn-badge--split:hover { background: #ffedd5; }
 .fmn-icon:hover { background: #fff; color: var(--fmn-ink); }
 .fmn-icon--danger:hover { color: var(--fmn-danger); }
 
-/* 詳細編集 */
-.fmn-editor {
-  margin: .25rem 0 .75rem 3.25rem; padding: 1rem; border: 1px solid var(--fmn-line);
-  border-radius: .5rem; background: var(--fmn-soft); display: grid; gap: .75rem;
+/* 右ペイン（詳細。そのままインライン編集できる） */
+.fmn-detail { display: grid; gap: .75rem; }
+.fmn-detail__head { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.fmn-detail__title-input {
+  flex: 1 1 auto; min-width: 0; font-size: 1.375rem; font-weight: 700; font-family: inherit;
+  border: 1px solid transparent; background: none; padding: .125rem .375rem; border-radius: .375rem;
+  overflow-wrap: anywhere; color: inherit;
 }
-.fmn-editor__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .75rem; }
-.fmn-editor__row { display: grid; gap: .25rem; }
-.fmn-editor__label { font-size: .8125rem; font-weight: 500; color: var(--fmn-muted); }
-.fmn-editor__input { width: 100%; box-sizing: border-box; }
-.fmn-editor__note { margin: 0; font-size: .8125rem; color: var(--fmn-muted); }
-.fmn-editor__actions { display: flex; gap: .5rem; }
+.fmn-detail__title-input:hover { box-shadow: inset 0 0 0 1px var(--fmn-line); }
+.fmn-detail__title-input:focus { outline: none; border-color: var(--fmn-primary); background: #fff; }
+.fmn-detail__title-input.is-done { color: var(--fmn-muted); text-decoration: line-through; }
+.fmn-detail__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .75rem; }
+.fmn-detail__field { display: grid; gap: .25rem; }
+.fmn-detail__label { font-size: .8125rem; font-weight: 500; color: var(--fmn-muted); }
+.fmn-detail__note { margin: 0; font-size: .8125rem; color: var(--fmn-muted); }
+.fmn-detail__meta { display: flex; gap: .75rem; flex-wrap: wrap; font-size: .875rem; color: var(--fmn-muted); }
+.fmn-detail__meta .is-today { color: var(--fmn-split); font-weight: 600; }
+.fmn-detail__meta .is-overdue { color: var(--fmn-danger); font-weight: 600; }
+.fmn-detail__actions { display: flex; gap: .5rem; }
+.fmn-detail__children { margin-top: .5rem; padding-top: 1rem; border-top: 1px solid var(--fmn-line); }
+.fmn-detail__subheading { margin: 0 0 .5rem; font-size: .9375rem; font-weight: 600; color: var(--fmn-muted); }
 
 .fmn-empty { color: var(--fmn-muted); text-align: center; padding: 2.5rem 0; }
+.fmn-empty--small { padding: .75rem 0; }
+
+@media (max-width: 800px) {
+  .fmn-panes { flex-direction: column; }
+  .fmn-pane--list { max-width: none; }
+}
 
 @media (max-width: 640px) {
-  /* 1行目: 開閉・チェック・タイトル・操作ボタン / 2行目: 分類と見積もり・期間 */
+  /* 1行目: チェック・タイトル・分類 / 2行目: 見積もり・期間・サブタスク件数 */
   .fmn-row { flex-wrap: wrap; row-gap: .25rem; }
-  .fmn-title { flex: 1 1 calc(100% - 9rem); }
-  .fmn-icon { order: 2; opacity: 1; }
-  .fmn-row .fmn-badge { order: 3; margin-left: 3.25rem; }
-  .fmn-meta { order: 4; flex: 1 1 auto; flex-wrap: wrap; white-space: normal; row-gap: 0; }
-  .fmn-children { margin-left: .75rem; }
-  .fmn-subform, .fmn-editor { margin-left: .5rem; }
+  .fmn-title { flex: 1 1 calc(100% - 6rem); }
+  .fmn-meta { order: 3; flex: 1 1 auto; flex-wrap: wrap; white-space: normal; row-gap: 0; margin-left: 1.6rem; }
+  .fmn-chevron { order: 2; }
   .fmn-new__title { flex-basis: 100%; }
 }

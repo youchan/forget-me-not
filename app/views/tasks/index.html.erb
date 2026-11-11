@@ -4,6 +4,6 @@
   <meta name="turbo-visit-control" content="reload">
 <% end %>
 
-<%= funicular_app_container class: "fmn-app" %>
+<%= funicular_app_container class: "fmn-app", data: { base: request.script_name } %>
 <script type="application/x-mrb" src="<%= asset_path("app.mrb") %>"></script>
 <%= picoruby_include_tag %>

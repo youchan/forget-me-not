@@ -4,6 +4,7 @@ import { postJSON } from "csrf"
 
 export default class extends Controller {
   static targets = ["email", "nickname", "error", "submit"]
+  static values = { optionsUrl: String, registrationsUrl: String }
 
   async register(event) {
     event.preventDefault()
@@ -12,9 +13,9 @@ export default class extends Controller {
 
     try {
       const email = this.emailTarget.value
-      const options = await postJSON("/registrations/options", { email })
+      const options = await postJSON(this.optionsUrlValue, { email })
       const credential = await create({ publicKey: options })
-      const result = await postJSON("/registrations", {
+      const result = await postJSON(this.registrationsUrlValue, {
         credential,
         nickname: this.hasNicknameTarget ? this.nicknameTarget.value : null
       })

@@ -1,6 +1,8 @@
 <% content_for :title, "新規登録" %>
 
-<div class="w-full max-w-md mx-auto" data-controller="webauthn-registration">
+<div class="w-full max-w-md mx-auto" data-controller="webauthn-registration"
+  data-webauthn-registration-options-url-value="<%= registration_options_path %>"
+  data-webauthn-registration-registrations-url-value="<%= registrations_path %>">
   <h1 class="font-bold text-4xl mb-6">新規登録</h1>
 
   <p data-webauthn-registration-target="error" class="hidden py-2 px-3 bg-red-50 mb-5 text-red-600 font-medium rounded-md"></p>

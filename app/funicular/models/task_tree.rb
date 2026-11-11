@@ -39,11 +39,17 @@ class TaskTree
   end
 
   def roots
-    @children[nil] || []
+    children_of_id(nil)
   end
 
   def children_of(task)
-    @children[task["id"]] || []
+    children_of_id(task["id"])
+  end
+
+  # 親の id で子を引く版。ルート直下は id に nil を渡す
+  # (2ペイン表示で「今どの階層を見ているか」を id だけで持ち回るのに使う)
+  def children_of_id(id)
+    @children[id] || []
   end
 
   def leaf?(task)

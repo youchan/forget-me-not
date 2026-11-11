@@ -38,5 +38,20 @@ module ForgetMeNot
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Set in .env (untracked) for deployments reverse-proxied through a custom domain.
+    config.hosts << ENV["ADDITIONAL_HOST"] if ENV["ADDITIONAL_HOST"].present?
+
+    # nginx can mount this app under a path prefix so it can share the domain
+    # with other services. Route/redirect helpers pick this up dynamically
+    # from the X-Forwarded-Prefix header below; asset helpers only look at
+    # relative_url_root, so it's set statically to match the nginx location.
+    config.relative_url_root = ENV["RELATIVE_URL_ROOT"] if ENV["RELATIVE_URL_ROOT"].present?
+
+    config.middleware.use Rack::Config do |env|
+      if prefix = env["HTTP_X_FORWARDED_PREFIX"]
+        env["SCRIPT_NAME"] = prefix
+      end
+    end
   end
 end

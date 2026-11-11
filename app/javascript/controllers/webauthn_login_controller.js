@@ -4,6 +4,7 @@ import { postJSON } from "csrf"
 
 export default class extends Controller {
   static targets = ["email", "error", "submit"]
+  static values = { optionsUrl: String, sessionsUrl: String }
 
   async login(event) {
     event.preventDefault()
@@ -12,9 +13,9 @@ export default class extends Controller {
 
     try {
       const email = this.emailTarget.value
-      const options = await postJSON("/sessions/options", { email })
+      const options = await postJSON(this.optionsUrlValue, { email })
       const credential = await get({ publicKey: options })
-      const result = await postJSON("/sessions", { credential })
+      const result = await postJSON(this.sessionsUrlValue, { credential })
       window.location.href = result.redirect_to
     } catch (error) {
       this.showError(error.message)

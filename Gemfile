@@ -59,6 +59,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Load untracked local settings from .env [https://github.com/bkeepers/dotenv]
+  gem "dotenv-rails"
 end
 
 gem "webauthn", "~> 3.4"

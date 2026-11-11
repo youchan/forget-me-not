@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :tasks, only: %i[ index create update destroy ]
   # 旧 Todo の URL から来た場合
-  get "todos", to: redirect("/tasks")
+  get "todos", to: redirect { |_params, request| "#{request.script_name}/tasks" }
 
   get "sign_up", to: "registrations#new", as: :sign_up
   post "registrations/options", to: "registrations#options", as: :registration_options
