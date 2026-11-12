@@ -4,12 +4,22 @@ class TasksController < ApplicationController
   before_action :require_login
   before_action :set_task, only: %i[ update destroy ]
 
-  # GET /tasks      -> Funicular アプリのページ
-  # GET /tasks.json -> ログインユーザーの全タスク（フラットな配列。ツリーはクライアントで組む）
+  # GET /tasks      -> Funicular アプリのページ（どのカテゴリを見るかを画面に埋め込む）
+  # GET /tasks.json -> ログインユーザーの、選んでるカテゴリのタスク（フラットな配列。ツリーはクライアントで組む）
+  #                    category_id が空なら「すべて」でカテゴリによる絞り込みなし
   def index
+    # ヘッダーのカテゴリ切り替えで ?category_id= が付いたときだけ記憶し直す。
+    # 付いてなければ（直接 /tasks に来た時など）前回選んでたカテゴリのまま
+    session[:active_category_id] = resolved_category_id if params.key?(:category_id)
+    @category_id = session[:active_category_id]
+
     respond_to do |format|
       format.html
-      format.json { @tasks = current_user.tasks.ordered }
+      format.json do
+        scope = current_user.tasks.ordered.includes(:tags)
+        scope = scope.where(category_id: @category_id) if @category_id.present?
+        @tasks = scope
+      end
     end
   end
 
@@ -45,7 +55,17 @@ class TasksController < ApplicationController
     end
 
     def task_params
-      params.expect(task: [ :title, :parent_id, :position, :estimate_pomodoros, :starts_on, :due_on, :done ])
+      params.expect(
+        task: [ :title, :parent_id, :category_id, :position, :estimate_pomodoros, :starts_on, :due_on, :done,
+                { tag_ids: [] } ]
+      )
+    end
+
+    # 渡ってきた category_id が自分のカテゴリでなければ無視する（なりすまし対策）
+    def resolved_category_id
+      id = params[:category_id].presence
+      return nil unless id
+      current_user.categories.where(id: id).pick(:id)
     end
 
     def render_errors

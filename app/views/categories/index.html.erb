@@ -1,0 +1,39 @@
+<% content_for :title, "カテゴリを編集" %>
+
+<div class="w-full max-w-md mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="font-bold text-3xl">カテゴリを編集</h1>
+    <%= link_to "+ 追加", new_category_path,
+          class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium" %>
+  </div>
+
+  <% if @categories.empty? %>
+    <p class="text-gray-500 text-center py-10">まだカテゴリがありません。</p>
+  <% else %>
+    <ul class="border-t border-gray-200">
+      <% @categories.each do |category| %>
+        <li class="flex justify-between items-center py-2.5 border-b border-gray-200 gap-3">
+          <span class="flex-1 min-w-0 overflow-wrap-anywhere">
+            <%= category.name %>
+            <% if category.is_default? %>
+              <span class="text-xs text-gray-400 font-medium">(既定)</span>
+            <% end %>
+          </span>
+          <div class="flex gap-1 shrink-0">
+            <%= link_to "編集", edit_category_path(category),
+                  class: "rounded-md px-2.5 py-1 text-sm hover:bg-gray-100 font-medium" %>
+            <% unless category.is_default? %>
+              <%= button_to "削除", category_path(category), method: :delete,
+                    data: { turbo_confirm: "「#{category.name}」を削除します。中のタスクは既定カテゴリに移ります。よろしいですか？" },
+                    class: "rounded-md px-2.5 py-1 text-sm text-red-600 hover:bg-red-50 font-medium bg-transparent cursor-pointer" %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <p class="mt-6">
+    <%= link_to "← タスクに戻る", tasks_path, class: "text-blue-600 font-medium" %>
+  </p>
+</div>

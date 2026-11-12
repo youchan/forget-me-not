@@ -15,10 +15,12 @@ class TaskBoard < Funicular::Component
   def initialize_state
     {
       tasks: [],
+      tags: [],               # ユーザーの全タグ（{"id"=>, "name"=>}）。絞り込みチップと付け外しに使う
       loading: true,
       error: nil,
       current_parent_id: nil, # 左ペインに出す階層。nil はルート
       selected_id: nil,       # 右ペインで開いているタスク
+      active_tag_id: nil,     # 絞り込み中のタグ（ドロップダウンなので1つだけ）
       hide_done: false,
       today: today_string
     }
@@ -26,6 +28,7 @@ class TaskBoard < Funicular::Component
 
   def component_mounted
     load_tasks
+    load_tags
   end
 
   # PicoRuby の Time には month が無いので、日付はブラウザの Date から取る
@@ -40,7 +43,9 @@ class TaskBoard < Funicular::Component
   # サーバーとのやり取り
   # ---------------------------------------------------------------
   def load_tasks
-    Funicular::HTTP.get("#{Funicular.mount_base_path}/tasks.json") do |response|
+    category_id = Funicular.active_category_id
+    query = category_id.empty? ? "" : "?category_id=#{category_id}"
+    Funicular::HTTP.get("#{Funicular.mount_base_path}/tasks.json#{query}") do |response|
       if response.ok
         patch(tasks: response.data, loading: false, error: nil)
       else
@@ -49,7 +54,17 @@ class TaskBoard < Funicular::Component
     end
   end
 
+  def load_tags
+    Funicular::HTTP.get("#{Funicular.mount_base_path}/tags.json") do |response|
+      patch(tags: response.data) if response.ok
+    end
+  end
+
+  # ルートタスクは今見ているカテゴリに入る。サブタスクはどのみちサーバー側で
+  # 親と同じカテゴリに揃えられるので、category_id を渡しておいて問題ない
   def create_task(attrs)
+    category_id = Funicular.active_category_id
+    attrs = attrs.merge(category_id: category_id.empty? ? nil : category_id)
     Funicular::HTTP.post("#{Funicular.mount_base_path}/tasks.json", { task: attrs }) do |response|
       if response.ok
         patch(tasks: state[:tasks] + [ response.data ], error: nil)
@@ -148,6 +163,21 @@ class TaskBoard < Funicular::Component
     patch(hide_done: !state[:hide_done])
   end
 
+  def handle_tag_filter_change(_event)
+    field = JS.document.getElementById("tag-filter-select")
+    raw = field ? field[:value].to_s : ""
+    patch(active_tag_id: raw.empty? ? nil : raw.to_i)
+  end
+
+  # 右ペインでのタグの付け外し
+  def toggle_task_tag(task, tag_id)
+    -> {
+      current = task["tag_ids"] || []
+      new_ids = current.include?(tag_id) ? current.reject { |id| id == tag_id } : current + [ tag_id ]
+      update_task(task["id"], tag_ids: new_ids)
+    }
+  end
+
   # ---------------------------------------------------------------
   # 右ペインのインライン編集（フィールドの値は DOM から直接読む。
   # フォーカス中の input には再描画の value が反映されないため、
@@ -200,6 +230,17 @@ class TaskBoard < Funicular::Component
     update_task(task["id"], due_on: value.empty? ? nil : value)
   end
 
+  # タグ追加ドロップダウンで選んだら即そのタグを付けて、ドロップダウンは
+  # （選択肢が変わって再描画されるので）自然と「+ タグを追加」に戻る
+  def handle_add_tag(_event)
+    task = tree.find(state[:selected_id])
+    return unless task
+    raw = field_value(task, "add_tag")
+    return if raw.empty?
+    current = task["tag_ids"] || []
+    update_task(task["id"], tag_ids: current + [ raw.to_i ])
+  end
+
   # ---------------------------------------------------------------
   # 表示用の下ごしらえ
   # ---------------------------------------------------------------
@@ -242,8 +283,14 @@ class TaskBoard < Funicular::Component
   end
 
   def visible?(t, task)
-    return true unless state[:hide_done]
-    task["done"] != true
+    return false if state[:hide_done] && task["done"] == true
+    tag_filter_matches?(task)
+  end
+
+  def tag_filter_matches?(task)
+    active = state[:active_tag_id]
+    return true if active.nil?
+    (task["tag_ids"] || []).include?(active)
   end
 
   # 親をたどって根までの配列（根が先頭）
@@ -294,7 +341,7 @@ class TaskBoard < Funicular::Component
         end
       end
 
-      render_summary(t)
+      render_tag_filter
 
       if state[:loading]
         p(class: "fmn-empty") { "読み込み中…" }
@@ -355,6 +402,7 @@ class TaskBoard < Funicular::Component
     size_text, progress_text = size_label(t, task, kind)
     period = period_of(task)
     child_count = t.children_of(task).size
+    applied_tags = tags_for(task)
 
     row_class = "fmn-row fmn-row--#{kind}"
     row_class += " is-done" if done
@@ -365,7 +413,7 @@ class TaskBoard < Funicular::Component
         input(type: "checkbox", class: "fmn-check", checked: done,
               "aria-label": "完了", onchange: toggle_done(task))
         button(class: "fmn-title", onclick: on_click, title: "クリックで詳細を表示") { task["title"] }
-        span(class: "fmn-badge fmn-badge--#{kind}") { TaskTree::KIND_LABELS[kind] }
+        render_tag_badges(applied_tags)
         span(class: "fmn-meta") do
           span(class: "fmn-size") { size_text.to_s }
           span(class: "fmn-progress") { progress_text.to_s }
@@ -382,6 +430,19 @@ class TaskBoard < Funicular::Component
     end
   end
 
+  # 「すぐ終わる/見積もりなし」などの分類バッジの代わりに、付いてるタグをバッジで出す。
+  # task を渡すとクリックで外せる（右ペインの詳細用）
+  def render_tag_badges(tags, task: nil)
+    tags.each do |tg|
+      if task
+        button(key: tg["id"], class: "fmn-badge fmn-badge--tag fmn-badge--removable",
+               onclick: toggle_task_tag(task, tg["id"]), title: "クリックで外す") { "#{tg["name"]} ×" }
+      else
+        span(key: tg["id"], class: "fmn-badge fmn-badge--tag") { tg["name"] }
+      end
+    end
+  end
+
   def render_detail(t, task)
     kind = t.kind_of(task)
     done = task["done"] == true
@@ -389,6 +450,7 @@ class TaskBoard < Funicular::Component
     period = period_of(task)
     children = t.children_of(task).select { |child| visible?(t, child) }
     current_estimate = task["estimate_pomodoros"]
+    applied_tags = tags_for(task)
 
     div(class: "fmn-detail") do
       div(class: "fmn-detail__head") do
@@ -398,7 +460,7 @@ class TaskBoard < Funicular::Component
               class: "fmn-detail__title-input#{done ? " is-done" : ""}",
               value: task["title"], autocomplete: "off",
               onblur: :handle_title_blur, onkeydown: :handle_title_keydown)
-        span(class: "fmn-badge fmn-badge--#{kind}") { TaskTree::KIND_LABELS[kind] }
+        render_tag_badges(applied_tags)
       end
 
       div(class: "fmn-detail__fields") do
@@ -442,6 +504,24 @@ class TaskBoard < Funicular::Component
         end
       end
 
+      unless state[:tags].empty?
+        div(class: "fmn-detail__tags") do
+          h3(class: "fmn-detail__subheading") { "タグ" }
+          applied_ids = applied_tags.map { |tg| tg["id"] }
+          unless applied_tags.empty?
+            div(class: "fmn-tag-badges") { render_tag_badges(applied_tags, task: task) }
+          end
+          available = state[:tags].reject { |tg| applied_ids.include?(tg["id"]) }
+          unless available.empty?
+            tag("select", id: detail_field_id(task, "add_tag"), class: "fmn-detail__input",
+                onchange: :handle_add_tag) do
+              option(value: "", selected: true) { "+ タグを追加" }
+              available.each { |tg| option(value: tg["id"].to_s) { tg["name"] } }
+            end
+          end
+        end
+      end
+
       div(class: "fmn-detail__actions") do
         button(class: "fmn-btn fmn-btn--danger", onclick: confirm_delete(task)) { "削除" }
       end
@@ -468,15 +548,20 @@ class TaskBoard < Funicular::Component
     end
   end
 
-  def render_summary(t)
-    counts = t.open_leaf_counts
-    div(class: "fmn-summary") do
-      next if state[:tasks].empty?
-      [ :todo, :split, :unestimated, :big ].each do |kind|
-        span(key: kind.to_s, class: "fmn-summary__item fmn-badge fmn-badge--#{kind}") do
-          "#{TaskTree::KIND_LABELS[kind]} #{counts[kind]}"
-        end
+  # タグの絞り込み。前はここに分類ごとの件数サマリーを出してたが、タグでの
+  # 絞り込みに置き換えた。タグが増えても乱雑にならないようドロップダウンにしている
+  def render_tag_filter
+    return if state[:tags].empty?
+    tag("select", id: "tag-filter-select", class: "fmn-detail__input", onchange: :handle_tag_filter_change) do
+      option(value: "", selected: state[:active_tag_id].nil?) { "すべてのタグ" }
+      state[:tags].each do |tg|
+        option(value: tg["id"].to_s, selected: state[:active_tag_id] == tg["id"]) { tg["name"] }
       end
     end
+  end
+
+  def tags_for(task)
+    ids = task["tag_ids"] || []
+    state[:tags].select { |tg| ids.include?(tg["id"]) }
   end
 end

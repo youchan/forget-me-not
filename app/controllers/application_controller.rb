@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
-  helper_method :current_user, :logged_in?
+  helper_method :current_user, :logged_in?, :active_category_id
 
   private
 
@@ -15,6 +15,11 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     current_user.present?
+  end
+
+  # ヘッダーのカテゴリ切り替えがどのページでも今の選択を表示できるように
+  def active_category_id
+    session[:active_category_id]
   end
 
   def require_login

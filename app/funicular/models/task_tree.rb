@@ -10,13 +10,6 @@
 class TaskTree
   QUICK_POMODOROS = 2
 
-  KIND_LABELS = {
-    big: "大きなタスク",
-    todo: "すぐ終わる",
-    split: "分割しよう",
-    unestimated: "見積もりなし"
-  }
-
   attr_reader :tasks
 
   def initialize(tasks)
@@ -107,16 +100,6 @@ class TaskTree
       subtree_ids(child).each { |id| ids << id }
     end
     ids
-  end
-
-  # 未完了の葉タスクを分類ごとに数える（画面上部のサマリー用）
-  def open_leaf_counts
-    counts = { todo: 0, split: 0, unestimated: 0, big: 0 }
-    @tasks.each do |t|
-      next if done?(t)
-      counts[kind_of(t)] += 1
-    end
-    counts
   end
 
   private

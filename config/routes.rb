@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :tasks, only: %i[ index create update destroy ]
+  resources :categories, except: [ :show ]
+  resources :tags, except: [ :show ]
   # 旧 Todo の URL から来た場合
   get "todos", to: redirect { |_params, request| "#{request.script_name}/tasks" }
 

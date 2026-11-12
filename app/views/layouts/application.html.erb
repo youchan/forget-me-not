@@ -28,9 +28,30 @@
       <%= link_to "Forget Me Not", logged_in? ? tasks_path : sign_in_path, class: "font-bold text-xl" %>
       <% if logged_in? %>
         <div class="flex items-center gap-4">
+          <%= form_with url: tasks_path, method: :get, data: { controller: "auto-submit" } do |f| %>
+            <%= f.select :category_id,
+                  options_for_select(
+                    [ [ "すべて", "" ] ] + current_user.categories.ordered.map { |c| [ c.name, c.id ] },
+                    active_category_id.to_s
+                  ),
+                  {},
+                  class: "rounded-md border border-gray-300 px-2 py-1.5 text-sm cursor-pointer",
+                  data: { action: "change->auto-submit#submit" } %>
+          <% end %>
           <span class="text-gray-600"><%= current_user.email %></span>
-          <%= button_to "ログアウト", sign_out_path, method: :delete,
-                class: "rounded-md px-3 py-1.5 bg-gray-100 hover:bg-gray-50 font-medium cursor-pointer" %>
+          <div class="relative" data-controller="menu">
+            <button type="button" data-action="click->menu#toggle" aria-label="メニュー"
+                    class="rounded-md px-3 py-1.5 bg-gray-100 hover:bg-gray-50 font-medium cursor-pointer">
+              ☰
+            </button>
+            <div data-menu-target="menu"
+                 class="hidden absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-10">
+              <%= link_to "カテゴリを編集", categories_path, class: "block px-4 py-2 text-sm hover:bg-gray-50" %>
+              <%= link_to "タグを編集", tags_path, class: "block px-4 py-2 text-sm hover:bg-gray-50" %>
+              <%= button_to "ログアウト", sign_out_path, method: :delete,
+                    class: "block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 bg-transparent cursor-pointer" %>
+            </div>
+          </div>
         </div>
       <% end %>
     </header>

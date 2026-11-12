@@ -47,8 +47,11 @@
 .fmn-btn--danger { color: var(--fmn-danger); }
 .fmn-btn--danger:hover { background: #fef2f2; }
 
-/* サマリー */
-.fmn-summary { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+/* タグの絞り込みドロップダウン（タスクの下）と、右ペインで付いてるタグの表示 */
+#tag-filter-select { margin-bottom: 1rem; }
+.fmn-tag-badges { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.fmn-badge--removable { cursor: pointer; }
+.fmn-badge--removable:hover { background: #e5e7eb; }
 
 /* 2ペイン・ドリルダウン */
 .fmn-panes { display: flex; gap: 1.5rem; align-items: flex-start; }
@@ -93,10 +96,7 @@
   flex: none; padding: .1rem .5rem; border-radius: 999px; font-size: .75rem; font-weight: 600;
   border: none; white-space: nowrap; font-family: inherit;
 }
-.fmn-badge--todo { color: var(--fmn-todo); background: var(--fmn-todo-bg); }
-.fmn-badge--split { color: var(--fmn-split); background: var(--fmn-split-bg); }
-.fmn-badge--big { color: var(--fmn-big); background: var(--fmn-big-bg); }
-.fmn-badge--unestimated { color: var(--fmn-unest); background: var(--fmn-unest-bg); }
+.fmn-badge--tag { color: var(--fmn-unest); background: var(--fmn-unest-bg); }
 .fmn-row.is-done .fmn-badge { opacity: .5; }
 
 .fmn-meta { flex: none; display: flex; gap: .6rem; align-items: center; font-size: .8125rem; color: var(--fmn-muted); white-space: nowrap; }
@@ -130,6 +130,7 @@
 .fmn-detail__meta { display: flex; gap: .75rem; flex-wrap: wrap; font-size: .875rem; color: var(--fmn-muted); }
 .fmn-detail__meta .is-today { color: var(--fmn-split); font-weight: 600; }
 .fmn-detail__meta .is-overdue { color: var(--fmn-danger); font-weight: 600; }
+.fmn-detail__tags { padding-top: .75rem; border-top: 1px solid var(--fmn-line); }
 .fmn-detail__actions { display: flex; gap: .5rem; }
 .fmn-detail__children { margin-top: .5rem; padding-top: 1rem; border-top: 1px solid var(--fmn-line); }
 .fmn-detail__subheading { margin: 0 0 .5rem; font-size: .9375rem; font-weight: 600; color: var(--fmn-muted); }

@@ -9,10 +9,13 @@ class Task < ApplicationRecord
   QUICK_POMODOROS = 2
 
   belongs_to :user
+  belongs_to :category
   belongs_to :parent, class_name: "Task", optional: true, inverse_of: :children
   has_many :children, -> { order(:position, :id) },
            class_name: "Task", foreign_key: :parent_id,
            inverse_of: :parent, dependent: :destroy
+  has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
 
   validates :title, presence: { message: "タイトルを入れてや" }
   validates :estimate_pomodoros,
@@ -21,7 +24,10 @@ class Task < ApplicationRecord
   validate :due_on_not_before_starts_on
   validate :parent_owned_by_same_user
   validate :parent_not_self_or_descendant
+  validate :category_owned_by_same_user
+  validate :tags_owned_by_same_user
 
+  before_validation :assign_category
   before_save :append_to_siblings, if: -> { new_record? || will_save_change_to_parent_id? }
 
   scope :roots, -> { where(parent_id: nil) }
@@ -65,6 +71,27 @@ class Task < ApplicationRecord
     errors.add(:parent, "親タスクが見つからんで") if parent.user_id != user_id
   end
 
+  def category_owned_by_same_user
+    return unless category
+    errors.add(:category, "カテゴリが見つからんで") if category.user_id != user_id
+  end
+
+  def tags_owned_by_same_user
+    return if tags.empty?
+    errors.add(:tags, "タグが見つからんで") if tags.any? { |t| t.user_id != user_id }
+  end
+
+  # サブタスクは常に親と同じカテゴリにする（カテゴリはルートタスクで選ぶもの）。
+  # ルートタスクでカテゴリが指定されなかったら、ユーザーの既定カテゴリに入れる
+  # （カテゴリなしのタスクは作らせない）
+  def assign_category
+    if parent
+      self.category_id = parent.category_id
+    elsif category_id.blank?
+      self.category_id = user.default_category.id if user
+    end
+  end
+
   def parent_not_self_or_descendant
     return unless parent && persisted?
     if parent.id == id || parent.ancestors.any? { |a| a.id == id }
@@ -75,7 +102,8 @@ class Task < ApplicationRecord
   # 新規作成時や親を付け替えた時は、兄弟の末尾に並べる
   def append_to_siblings
     return if position_changed? && position.to_i.positive?
-    max = Task.where(user_id: user_id, parent_id: parent_id).where.not(id: id).maximum(:position)
+    max = Task.where(user_id: user_id, parent_id: parent_id, category_id: category_id)
+      .where.not(id: id).maximum(:position)
     self.position = max.to_i + 1
   end
 end
